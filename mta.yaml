@@ -1,0 +1,71 @@
+---
+_schema-version: '3.1'
+ID: riz.inno.fs-demo-2022
+version: 1.0.0
+description: "Field Service Technician Demo 2022"
+parameters:
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npx -p @sap/cds-dk cds build --production
+
+modules:
+  - name: fs-demo-2022-srv
+    type: nodejs
+    path: gen/srv
+    parameters:
+      buildpack: nodejs_buildpack
+      memory: 256M
+      disk-quota: 512M
+    build-parameters:
+      builder: npm-ci
+    provides:
+      - name: srv-api # required by consumers of CAP services (e.g. approuter)
+        properties:
+          srv-url: ${default-url}
+    requires:
+      - name: fs-demo-2022-db
+      - name: fs-demo-2022-auth
+
+  - name: fs-demo-2022-db-deployer
+    type: hdb
+    path: gen/db
+    parameters:
+      buildpack: nodejs_buildpack
+    requires:
+      - name: fs-demo-2022-db
+
+  - name: fs-demo-2022
+    type: approuter.nodejs
+    path: app/ # from cds.env.folders. Consider also cds.env.build.target -> gen/app
+    parameters:
+      keep-existing-routes: true
+      disk-quota: 256M
+      memory: 256M
+    requires:
+      - name: srv-api
+        group: destinations
+        properties:
+          name: srv-api # must be used in xs-app.json as well
+          url: ~{srv-url}
+          forwardAuthToken: true
+      - name: fs-demo-2022-auth
+
+resources:
+  - name: fs-demo-2022-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana # or 'hanatrial' on trial landscapes
+      service-plan: hdi-shared
+
+  - name: fs-demo-2022-auth
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: /security/xs-security.json
+      config:
+        xsappname: fs-demo-2022-${org}-${space}
+        tenant-mode: dedicated

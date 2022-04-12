@@ -7,16 +7,24 @@
   "private": true,
   "dependencies": {
     "@sap/cds": "^5",
-    "express": "^4"
+    "@sap/xssec": "^3",
+    "express": "^4",
+    "hdb": "^0.19.0",
+    "passport": "^0"
   },
   "devDependencies": {
+    "@sap/eslint-plugin-cds": "^2.3.5",
+    "eslint": "^8.13.0",
     "sqlite3": "^5.0.2"
   },
   "scripts": {
     "start": "cds run"
   },
   "eslintConfig": {
-    "extends": "eslint:recommended",
+    "extends": [
+      "eslint:recommended",
+      "plugin:@sap/cds/recommended"
+    ],
     "env": {
       "es2020": true,
       "node": true,
@@ -38,6 +46,24 @@
     "rules": {
       "no-console": "off",
       "require-atomic-updates": "off"
+    }
+  },
+  "cds": {
+    "requires": {
+      "[production]": {
+        "db": {
+          "kind": "hana-cloud"
+        },
+        "auth": {
+          "kind": "xsuaa"
+        },
+        "approuter": {
+          "kind": "cloudfoundry"
+        }
+      },
+      "db": {
+        "kind": "sql"
+      }
     }
   }
 }
