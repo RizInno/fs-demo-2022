@@ -6,12 +6,6 @@ const wss = new WebSocket.Server({ noServer: true });
 
 
 // react on bootstrapping events...
-cds.on('bootstrap', (cdsServer) => {
-    console.log('--> bootstrap')
-})
-cds.on('served', (cdsServer) => {
-    console.log('--> served')
-})
 cds.on('listening', (cdsServer) => {
     console.log('--> listening')
 
