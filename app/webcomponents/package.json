@@ -1,0 +1,26 @@
+{
+	"name": "@rizing/webcomponents",
+	"version": "0.1.0",
+	"description": "Rizing Web Components",
+	"main": "index.js",
+	"scripts": {
+		"dev": "webpack serve --mode=development --open",
+		"build": "webpack"
+	},
+	"keywords": [],
+	"author": "Jhodel Cailan",
+	"license": "ISC",
+	"devDependencies": {
+		"@babel/core": "^7.12.9",
+		"@babel/preset-env": "^7.12.7",
+		"@babel/preset-typescript": "^7.13.0",
+		"babel-loader": "^8.2.2",
+		"css-loader": "^5.2.0",
+		"style-loader": "^2.0.0",
+		"to-string-loader": "^1.1.6",
+		"typescript": "^4.2.4",
+		"webpack": "^5.28.0",
+		"webpack-cli": "^4.6.0",
+		"webpack-dev-server": "^3.11.2"
+	}
+}
