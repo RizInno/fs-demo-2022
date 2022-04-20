@@ -10,6 +10,7 @@
 		"@ui5/webcomponents-fiori": "^1.2.4",
 		"@ui5/webcomponents-icons": "^1.2.4",
 		"@ui5/webcomponents-react": "^0.22.7",
+		"mapbox-gl": "^2.8.1",
 		"react": "^18.0.0",
 		"react-dom": "^18.0.0",
 		"react-scripts": "5.0.1",
