@@ -12,6 +12,8 @@ import './App.css';
 import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 
+import WebSocketProvider from "./WebSocketProvider";
+
 mapboxgl.accessToken = 'pk.eyJ1IjoibWFydGluc3RlbnppZyIsImEiOiJjazV1amZpdGwwZG92M2xucDhvbWoxMTB2In0.JWYYOv7JzUpGA51DQLQK-A';
 
 function App() {
@@ -20,6 +22,11 @@ function App() {
 	const [lng, setLng] = useState(-70.9);
 	const [lat, setLat] = useState(42.35);
 	const [zoom, setZoom] = useState(9);
+
+	const ws = new WebSocketProvider();
+	ws.attachEvent("messageReceived", (data) => {
+		console.log(data);
+	});
 
 	useEffect(() => {
 		if (map.current) return; // initialize map only once
