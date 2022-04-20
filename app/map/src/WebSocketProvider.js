@@ -22,7 +22,7 @@ export default class WebSocketProvider {
 		switch (name) {
 			case "messageReceived":
 				this.ws.onmessage = function(event) {
-					handler(event.data);
+					handler(JSON.parse(event.data));
 				};
 				break;
 
