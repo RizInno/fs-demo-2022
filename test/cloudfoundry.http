@@ -1,0 +1,21 @@
+
+@server=https://fsdemo-srv-sbx.cfapps.us10.hana.ondemand.com/
+@service=storage/
+
+
+### Populate the database with some data
+POST {{server}}{{service}}Crumbs
+Content-Type: application/json
+
+{
+    "crumbTime" : "2021-05-09T18:25:43.511Z",
+    "locationLat": 47.569503,
+    "locationLong" : -122.284001,
+    "locationAccuracy": 10.0,
+    "deviceId": "ABCESEDD",
+    "personId" : "Martin Stenzig (PID 212121)"
+}
+
+
+### Read all Crumbs
+GET {{server}}{{service}}Crumbs

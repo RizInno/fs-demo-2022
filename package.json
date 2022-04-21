@@ -1,69 +1,71 @@
 {
-  "name": "fs-demo-2022",
-  "version": "1.0.0",
-  "description": "A simple CAP project.",
-  "repository": "<Add your repository here>",
-  "license": "UNLICENSED",
-  "private": true,
-  "dependencies": {
-    "@sap/cds": "^5",
-    "@sap/xssec": "^3",
-    "express": "^4",
-    "hdb": "^0.19.0",
-    "passport": "^0"
-  },
-  "devDependencies": {
-    "@sap/eslint-plugin-cds": "^2.3.5",
-    "eslint": "^8.13.0",
-    "sqlite3": "^5.0.2"
-  },
-  "scripts": {
-    "start": "cds run"
-  },
-  "eslintConfig": {
-    "extends": [
-      "eslint:recommended",
-      "plugin:@sap/cds/recommended"
-    ],
-    "env": {
-      "es2020": true,
-      "node": true,
-      "jest": true,
-      "mocha": true
-    },
-    "globals": {
-      "SELECT": true,
-      "INSERT": true,
-      "UPDATE": true,
-      "DELETE": true,
-      "CREATE": true,
-      "DROP": true,
-      "CDL": true,
-      "CQL": true,
-      "CXL": true,
-      "cds": true
-    },
-    "rules": {
-      "no-console": "off",
-      "require-atomic-updates": "off"
-    }
-  },
-  "cds": {
-    "requires": {
-      "[production]": {
-        "db": {
-          "kind": "hana-cloud"
-        },
-        "auth": {
-          "kind": "xsuaa"
-        },
-        "approuter": {
-          "kind": "cloudfoundry"
-        }
-      },
-      "db": {
-        "kind": "sql"
-      }
-    }
-  }
+	"name": "fs-demo-2022",
+	"version": "1.0.0",
+	"description": "A simple CAP project.",
+	"repository": "<Add your repository here>",
+	"license": "UNLICENSED",
+	"private": true,
+	"dependencies": {
+		"@sap/cds": "^5",
+		"@sap/xssec": "^3",
+		"express": "^4",
+		"hdb": "^0.19.0",
+		"passport": "^0",
+		"ws": "^8.5.0"
+	},
+	"devDependencies": {
+		"@sap/eslint-plugin-cds": "^2.3.5",
+		"eslint": "^8.13.0",
+		"sqlite3": "^5.0.2"
+	},
+	"scripts": {
+		"start": "cds run",
+		"build": "cd app/map && npm install && npm run build && cd ../.."
+	},
+	"eslintConfig": {
+		"extends": [
+			"eslint:recommended",
+			"plugin:@sap/cds/recommended"
+		],
+		"env": {
+			"es2020": true,
+			"node": true,
+			"jest": true,
+			"mocha": true
+		},
+		"globals": {
+			"SELECT": true,
+			"INSERT": true,
+			"UPDATE": true,
+			"DELETE": true,
+			"CREATE": true,
+			"DROP": true,
+			"CDL": true,
+			"CQL": true,
+			"CXL": true,
+			"cds": true
+		},
+		"rules": {
+			"no-console": "off",
+			"require-atomic-updates": "off"
+		}
+	},
+	"cds": {
+		"requires": {
+			"[production]": {
+				"db": {
+					"kind": "hana-cloud"
+				},
+				"auth": {
+					"kind": "xsuaa"
+				},
+				"approuter": {
+					"kind": "cloudfoundry"
+				}
+			},
+			"db": {
+				"kind": "sql"
+			}
+		}
+	}
 }

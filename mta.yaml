@@ -1,6 +1,6 @@
 ---
-_schema-version: '3.1'
-ID: riz.inno.fs-demo-2022
+_schema-version: "3.1"
+ID: riz.inno.fsdemo
 version: 1.0.0
 description: "Field Service Technician Demo 2022"
 parameters:
@@ -10,13 +10,15 @@ build-parameters:
     - builder: custom
       commands:
         - npx -p @sap/cds-dk cds build --production
+        - npm run build
+        - cp -r app/map/build gen/srv/app
 
 modules:
-  - name: fs-demo-2022-srv
+  - name: fsdemo-srv
     type: nodejs
     path: gen/srv
     parameters:
-      buildpack: nodejs_buildpack
+      host: fsdemo-srv-${space}
       memory: 256M
       disk-quota: 512M
     build-parameters:
@@ -26,46 +28,32 @@ modules:
         properties:
           srv-url: ${default-url}
     requires:
-      - name: fs-demo-2022-db
-      - name: fs-demo-2022-auth
+      - name: fsdemo-db
+      - name: fsdemo-uaa
 
-  - name: fs-demo-2022-db-deployer
+  - name: fsdemo-db-deployer
     type: hdb
     path: gen/db
     parameters:
       buildpack: nodejs_buildpack
-    requires:
-      - name: fs-demo-2022-db
-
-  - name: fs-demo-2022
-    type: approuter.nodejs
-    path: app/ # from cds.env.folders. Consider also cds.env.build.target -> gen/app
-    parameters:
-      keep-existing-routes: true
+      memory: 128M
       disk-quota: 256M
-      memory: 256M
     requires:
-      - name: srv-api
-        group: destinations
-        properties:
-          name: srv-api # must be used in xs-app.json as well
-          url: ~{srv-url}
-          forwardAuthToken: true
-      - name: fs-demo-2022-auth
+      - name: fsdemo-db
 
 resources:
-  - name: fs-demo-2022-db
+  - name: fsdemo-db
     type: com.sap.xs.hdi-container
     parameters:
       service: hana # or 'hanatrial' on trial landscapes
       service-plan: hdi-shared
 
-  - name: fs-demo-2022-auth
+  - name: fsdemo-uaa
     type: org.cloudfoundry.managed-service
     parameters:
       service: xsuaa
       service-plan: application
-      path: /security/xs-security.json
+      path: ./security/xs-security.json
       config:
-        xsappname: fs-demo-2022-${org}-${space}
+        xsappname: fsdemo-${org}-${space}
         tenant-mode: dedicated

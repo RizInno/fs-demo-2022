@@ -1,5 +1,6 @@
 const protocol = document.location.protocol === 'https:' ? 'wss' : 'ws';
-const url = `${protocol}://localhost:4004/ws`;
+const host = document.location.protocol === 'https:' ? document.location.host : 'localhost:4004';
+const url = `${protocol}://${host}/ws`;
 
 
 export default class WebSocketProvider {
