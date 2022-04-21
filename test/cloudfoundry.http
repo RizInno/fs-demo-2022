@@ -8,12 +8,21 @@ POST {{server}}{{service}}Crumbs
 Content-Type: application/json
 
 {
-    "crumbTime" : "2021-05-09T18:25:43.511Z",
-    "locationLat": 47.569503,
-    "locationLong" : -122.284001,
-    "locationAccuracy": 10.0,
-    "deviceId": "ABCESEDD",
-    "personId" : "Martin Stenzig (PID 212121)"
+       "accelerometerScore": 2.33062744140625,
+       "accelerometerX": 0.1887359619140625,
+       "accelerometerY": -0.3112030029296875,
+       "accelerometerZ": -1.8306884765625,
+       "addressCity": "Seattle",
+       "addressPostalCode": "98118",
+       "addressState": "WA",
+       "addressStreet": "39th Ave S",
+       "crumbTime": "2022-04-21T14:41:54Z",
+       "deviceId": "76F19B03-E2ED-4193-B774-C1D33C393C05",
+       "fallDetected": false,
+       "locationLat": 47.569579719215746,
+       "locationLong": -122.28437000206462,
+       "personId": "Martin",
+       "speedMPH": 0.02
 }
 
 ### Populate the database with some data
@@ -21,14 +30,22 @@ POST {{server}}{{service}}Crumbs
 Content-Type: application/json
 
 {
-    "crumbTime" : "2021-05-09T18:25:43.511Z",
-    "locationLat": 47.57609455977092,
-    "locationLong" : -122.30948686460819,
-    "locationAccuracy": 10.0,
-    "deviceId": "ABCESEDD",
-    "personId" : "Martin Stenzig (PID 212121)"
-} 
-
+       "accelerometerScore": 2.33062744140625,
+       "accelerometerX": 0.1887359619140625,
+       "accelerometerY": -0.3112030029296875,
+       "accelerometerZ": -1.8306884765625,
+       "addressCity": "Seattle",
+       "addressPostalCode": "98118",
+       "addressState": "WA",
+       "addressStreet": "39th Ave S",
+       "crumbTime": "2022-04-21T14:41:54Z",
+       "deviceId": "76F19B03-E2ED-4193-B774-C1D33C393C05",
+       "fallDetected": false,
+       "locationLat": 47.669579719215746,
+       "locationLong": -122.38437000206462,
+       "personId": "Martin",
+       "speedMPH": 2.02
+}
 
 ### Read all Crumbs
 GET {{server}}{{service}}Crumbs

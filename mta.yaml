@@ -30,6 +30,7 @@ modules:
     requires:
       - name: fsdemo-db
       - name: fsdemo-uaa
+      - name: riz-inno-events # Replace this with the reference to your own event bus
 
   - name: fsdemo-db-deployer
     type: hdb
@@ -57,3 +58,6 @@ resources:
       config:
         xsappname: fsdemo-${org}-${space}
         tenant-mode: dedicated
+  
+  - name: riz-inno-events # Replace this with the reference to your own event bus
+    type: org.cloudfoundry.existing-service
