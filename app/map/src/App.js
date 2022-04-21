@@ -4,9 +4,12 @@ import {
 	FlexBoxDirection,
 	FlexBoxJustifyContent,
 	ShellBar,
+	Button,
+	Avatar,
 	Card,
 	ThemeProvider
 } from '@ui5/webcomponents-react';
+import '@ui5/webcomponents-icons/dist/nav-back.js';
 import './App.css';
 
 import React, { useRef, useEffect, useState } from 'react';
@@ -51,7 +54,18 @@ function App() {
 
 	return (
 		<ThemeProvider>
-			<ShellBar primaryTitle="UI5 Web Components for React Template" />
+			<ShellBar
+				primary-title="Geometry Explorer"
+				notifications-count="5+"
+				show-notifications
+				show-product-switch
+				show-co-pilot >
+				<Button icon="nav-back" slot="startButton"></Button>
+				<img slot="logo" src="./images/sap-logo-svg.svg" alt="SAP logo" />
+				<Avatar slot="profile">
+					<img src="./images/profile-photo.jpeg" alt="profile" />
+				</Avatar>
+			</ShellBar>
 			<FlexBox
 				style={{ width: '100%', height: '100%' }}
 				direction={FlexBoxDirection.Column}
