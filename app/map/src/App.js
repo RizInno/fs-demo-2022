@@ -24,6 +24,7 @@ mapboxgl.accessToken = 'pk.eyJ1IjoibWFydGluc3RlbnppZyIsImEiOiJjazV1amZpdGwwZG92M
 function App() {
 	const mapContainer = useRef(null);
 	const map = useRef(null);
+	const marker = useRef(null);
 	const [lng, setLng] = useState(-122.2888);
 	const [lat, setLat] = useState(47.5688);
 	const [zoom, setZoom] = useState(12);
@@ -44,11 +45,14 @@ function App() {
 		});
 
 		ws.attachEvent("messageReceived", (data) => {
-			console.log(data);
+			if (!marker.current) {
+				marker.current = new Marker();
+				marker.current.setLngLat([map.current.getCenter().lng, map.current.getCenter().lat]);
+				marker.current.addTo(map.current);
+				return;
+			}
 
-			new Marker()
-				.setLngLat([data.locationLong, data.locationLat])
-				.addTo(map.current);
+			marker.current.setLngLat([data.locationLong, data.locationLat]);
 		});
 	});
 
