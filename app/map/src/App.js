@@ -25,9 +25,9 @@ function App() {
 	const mapContainer = useRef(null);
 	const map = useRef(null);
 	const marker = useRef(null);
-	const [lng, setLng] = useState(-122.2888);
-	const [lat, setLat] = useState(47.5688);
-	const [zoom, setZoom] = useState(12);
+	const [lng, setLng] = useState(-101.4204);
+	const [lat, setLat] = useState(41.5045);
+	const [zoom, setZoom] = useState(3.63);
 
 	useEffect(() => {
 		if (map.current) return; // initialize map only once
@@ -65,7 +65,7 @@ function App() {
 				show-product-switch
 				show-co-pilot >
 				<Button icon="nav-back" slot="startButton"></Button>
-				<img slot="logo" src="./images/sap-logo-svg.svg" alt="SAP logo" />
+				<img slot="logo" src="./images/riz-inno-logo.png" alt="riz-inno" />
 				<Avatar slot="profile">
 					<img src="./images/profile-photo.jpeg" alt="profile" />
 				</Avatar>
