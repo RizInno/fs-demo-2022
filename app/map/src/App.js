@@ -62,8 +62,7 @@ function App() {
 				primary-title="Geometry Explorer"
 				notifications-count="5+"
 				show-notifications
-				show-product-switch
-				show-co-pilot >
+				show-product-switch >
 				<Button icon="nav-back" slot="startButton"></Button>
 				<img slot="logo" src="./images/riz-inno-logo.png" alt="riz-inno" />
 				<Avatar slot="profile">

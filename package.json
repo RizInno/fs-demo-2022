@@ -21,7 +21,7 @@
 	},
 	"scripts": {
 		"start": "cds run",
-		"build": "cd app/map && npm install --force&& npm run build && cd ../.."
+		"build": "cd app/map && npm install --force && npm run build && cd ../.."
 	},
 	"eslintConfig": {
 		"extends": [
