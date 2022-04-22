@@ -1,8 +1,15 @@
 const CRITICALITY = {
-	Postive: ['65,190,65', '160,222,160'],
+	Positive: ['65,190,65', '160,222,160'],
 	Negative: ['255,0,0', '255,128,128'],
 	Critical: ['247,151,8', '251,203,131'],
 	Neutral: ['119,130,136', '187,193,196']
+};
+
+const LAYER = {
+	Positive: 'Positive',
+	Negative: 'Negative',
+	Critical: 'Critical',
+	Neutral: 'Neutral'
 };
 
 const getImage = (map, criticality) => {
@@ -85,42 +92,72 @@ export default class LayerManager {
 
 	constructor(map) {
 		this.map = map;
+		this._addLayer(LAYER.Positive);
+		this._addLayer(LAYER.Negative);
+		this._addLayer(LAYER.Critical);
+		this._addLayer(LAYER.Neutral);
+	}
 
-		map.on('load', () => {
-			map.addImage('pulsing-dot', getImage(map, CRITICALITY.Neutral), { pixelRatio: 4 });
+	_addLayer(layer) {
+		this.map.on('load', () => {
+			this.map.addImage(layer, getImage(this.map, CRITICALITY[layer]), { pixelRatio: 4 });
 
-			map.addSource('dot-point', {
-				'type': 'geojson',
-				'data': {
-					'type': 'FeatureCollection',
-					'features': []
+			this.map.addSource(layer, {
+				type: 'geojson',
+				data: {
+					type: 'FeatureCollection',
+					features: []
 				}
 			});
 
-			map.addLayer({
-				'id': 'layer-with-pulsing-dot',
-				'type': 'symbol',
-				'source': 'dot-point',
-				'layout': {
-					'icon-image': 'pulsing-dot'
+			this.map.addLayer({
+				id: layer,
+				type: 'symbol',
+				source: layer,
+				layout: {
+					'icon-image': layer
 				}
 			});
 		});
 	}
 
 	setData(data) {
-		const point = this.map.getSource('dot-point');
+		this._setData(Object.assign(data, {
+			criticality: this._getCriticality(data)
+		}));
+	}
+
+	_setData(data) {
+		const point = this.map.getSource(data.criticality);
 		point.setData({
-			'type': 'FeatureCollection',
-			'features': [
+			type: 'FeatureCollection',
+			features: [
 				{
-					'type': 'Feature',
-					'geometry': {
-						'type': 'Point',
-						'coordinates': [data.locationLong, data.locationLat]
+					type: 'Feature',
+					geometry: {
+						type: 'Point',
+						coordinates: [data.locationLong, data.locationLat]
 					}
 				}
 			]
 		});
+	}
+
+	_getCriticality(data) {
+		const timeElapsed = new Date() - new Date(data.crumbTime);
+
+		if (data.fallDetected) {
+			if (timeElapsed > 15 * 1000) {
+				return LAYER.Negative;
+			} else {
+				return LAYER.Critical;
+			}
+		} else {
+			if (timeElapsed > 5 * 60 * 1000) {
+				return LAYER.Neutral;
+			} else {
+				return LAYER.Positive;
+			}
+		}
 	}
 }
