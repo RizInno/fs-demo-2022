@@ -40,7 +40,7 @@ Content-Type: application/json
        "addressStreet": "39th Ave S",
        "crumbTime": "2022-04-21T14:41:54Z",
        "deviceId": "76F19B03-E2ED-4193-B774-C1D33C393C05",
-       "fallDetected": false,
+       "fallDetected": true,
        "locationLat": 47.669579719215746,
        "locationLong": -122.38437000206462,
        "personId": "Martin",

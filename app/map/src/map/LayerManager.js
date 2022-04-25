@@ -12,6 +12,11 @@ const LAYER = {
 	Neutral: 'Neutral'
 };
 
+const replace = (array, oldData, newData) => {
+	array.splice(array.indexOf(oldData), 1, newData);
+	return array;
+};
+
 const getImage = (map, criticality) => {
 	const size = 200;
 
@@ -92,6 +97,7 @@ export default class LayerManager {
 
 	constructor(map) {
 		this.map = map;
+		this.data = [];
 		this._addLayer(LAYER.Positive);
 		this._addLayer(LAYER.Negative);
 		this._addLayer(LAYER.Critical);
@@ -128,19 +134,44 @@ export default class LayerManager {
 	}
 
 	_setData(data) {
-		const point = this.map.getSource(data.criticality);
-		point.setData({
+		const oldData = this.data.find(record => record.deviceId === data.deviceId);
+		let point = this.map.getSource(data.criticality);
+		let layerData;
+
+		if (!oldData) {
+			this.data.push(data);
+			layerData = this.data.filter(record => record.criticality === data.criticality);
+			point.setData(this._getGeoJson(layerData));
+		} else {
+			this.data = replace(this.data, oldData, data);
+			layerData = this.data.filter(record => record.criticality === data.criticality);
+			point.setData(this._getGeoJson(layerData));
+
+			if (data.criticality !== oldData.criticality) {
+				point = this.map.getSource(oldData.criticality);
+				layerData = this.data.filter(record => record.criticality === oldData.criticality);
+				point.setData(this._getGeoJson(layerData));
+			}
+		}
+	}
+
+	_getGeoJson(data) {
+		const collection = {
 			type: 'FeatureCollection',
-			features: [
-				{
-					type: 'Feature',
-					geometry: {
-						type: 'Point',
-						coordinates: [data.locationLong, data.locationLat]
-					}
+			features: []
+		};
+
+		data.forEach(record => {
+			collection.features.push({
+				type: 'Feature',
+				geometry: {
+					type: 'Point',
+					coordinates: [record.locationLong, record.locationLat]
 				}
-			]
+			});
 		});
+
+		return collection;
 	}
 
 	_getCriticality(data) {
