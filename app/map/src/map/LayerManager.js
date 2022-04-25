@@ -1,3 +1,5 @@
+import { Popup } from 'mapbox-gl';
+
 const CRITICALITY = {
 	Positive: ['65,190,65', '160,222,160'],
 	Negative: ['255,0,0', '255,128,128'],
@@ -93,11 +95,22 @@ const getImage = (map, criticality) => {
 	return image;
 };
 
+const getDescription = data => {
+	return `<strong>${data.personId}'s current location as of ${new Date().toISOString().substring(11, 19)}</strong>
+	<p>${data.addressStreet}, ${data.addressCity}, ${data.addressState} ${data.addressPostalCode}</p>`;
+};
+
 export default class LayerManager {
 
 	constructor(map) {
 		this.map = map;
 		this.data = [];
+
+		this.popup = new Popup({
+			closeButton: false,
+			closeOnClick: false
+		});
+
 		this._addLayer(LAYER.Positive);
 		this._addLayer(LAYER.Negative);
 		this._addLayer(LAYER.Critical);
@@ -124,6 +137,33 @@ export default class LayerManager {
 					'icon-image': layer
 				}
 			});
+		});
+
+		this.map.on('mouseenter', layer, event => {
+			// Change the cursor style as a UI indicator.
+			this.map.getCanvas().style.cursor = 'pointer';
+
+			// Copy coordinates array.
+			const coordinates = event.features[0].geometry.coordinates.slice();
+			const description = getDescription(event.features[0].properties);
+
+			// Ensure that if the map is zoomed out such that multiple
+			// copies of the feature are visible, the popup appears
+			// over the copy being pointed to.
+			while (Math.abs(event.lngLat.lng - coordinates[0]) > 180) {
+				coordinates[0] += event.lngLat.lng > coordinates[0] ? 360 : -360;
+			}
+
+			// Populate the popup and set its coordinates
+			// based on the feature found.
+			this.popup.setLngLat(coordinates)
+				.setHTML(description)
+				.addTo(this.map);
+		});
+
+		this.map.on('mouseleave', layer, () => {
+			this.map.getCanvas().style.cursor = '';
+			this.popup.remove();
 		});
 	}
 
@@ -167,7 +207,8 @@ export default class LayerManager {
 				geometry: {
 					type: 'Point',
 					coordinates: [record.locationLong, record.locationLat]
-				}
+				},
+				properties: record
 			});
 		});
 
