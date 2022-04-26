@@ -173,6 +173,18 @@ export default class LayerManager {
 		}));
 	}
 
+	refresh() {
+		this.data.forEach(record => {
+			const newCriticality = this._getCriticality(record);
+
+			if (newCriticality !== record.criticality) {
+				const newRecord = Object.assign({}, record);
+				newRecord.criticality = newCriticality;
+				this._setData(newRecord);
+			}
+		});
+	}
+
 	_setData(data) {
 		const oldData = this.data.find(record => record.deviceId === data.deviceId);
 		let point = this.map.getSource(data.criticality);

@@ -51,6 +51,10 @@ function App() {
 		ws.attachEvent("messageReceived", (data) => {
 			layer.current.setData(data);
 		});
+
+		setInterval(() => {
+			layer.current.refresh();
+		}, 5000);
 	});
 
 	return (
