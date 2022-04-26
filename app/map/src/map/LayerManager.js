@@ -19,7 +19,7 @@ const replace = (array, oldData, newData) => {
 	return array;
 };
 
-const getImage = (map, criticality) => {
+const getImage = (map, criticality, isAnimated) => {
 	const size = 200;
 
 	// This implements `StyleImageInterface`
@@ -47,18 +47,20 @@ const getImage = (map, criticality) => {
 			const outerRadius = (size / 2) * 0.7 * t + radius;
 			const context = this.context;
 
-			// Draw the outer circle.
-			context.clearRect(0, 0, this.width, this.height);
-			context.beginPath();
-			context.arc(
-				this.width / 2,
-				this.height / 2,
-				outerRadius,
-				0,
-				Math.PI * 2
-			);
-			context.fillStyle = `rgba(${criticality[1]}, ${1 - t})`;
-			context.fill();
+			if (isAnimated) {
+				// Draw the outer circle.
+				context.clearRect(0, 0, this.width, this.height);
+				context.beginPath();
+				context.arc(
+					this.width / 2,
+					this.height / 2,
+					outerRadius,
+					0,
+					Math.PI * 2
+				);
+				context.fillStyle = `rgba(${criticality[1]}, ${1 - t})`;
+				context.fill();
+			}
 
 			// Draw the inner circle.
 			context.beginPath();
@@ -83,9 +85,11 @@ const getImage = (map, criticality) => {
 				this.height
 			).data;
 
-			// Continuously repaint the map, resulting
-			// in the smooth animation of the dot.
-			map.triggerRepaint();
+			if (isAnimated) {
+				// Continuously repaint the map, resulting
+				// in the smooth animation of the dot.
+				map.triggerRepaint();
+			}
 
 			// Return `true` to let the map know that the image was updated.
 			return true;
@@ -119,7 +123,8 @@ export default class LayerManager {
 
 	_addLayer(layer) {
 		this.map.on('load', () => {
-			this.map.addImage(layer, getImage(this.map, CRITICALITY[layer]), { pixelRatio: 4 });
+			const isAnimated = (layer === LAYER.Critical || layer === LAYER.Negative) ? true : false;
+			this.map.addImage(layer, getImage(this.map, CRITICALITY[layer], isAnimated), { pixelRatio: 4 });
 
 			this.map.addSource(layer, {
 				type: 'geojson',
