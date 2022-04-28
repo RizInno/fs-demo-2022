@@ -236,7 +236,7 @@ export default class LayerManager {
 		const timeElapsed = new Date() - new Date(data.crumbTime);
 
 		if (data.fallDetected) {
-			if (timeElapsed > 15 * 1000) {
+			if (data.emergencyContacted) {
 				return LAYER.Negative;
 			} else {
 				return LAYER.Critical;
