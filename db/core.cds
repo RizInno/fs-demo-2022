@@ -22,4 +22,5 @@ entity Crumbs : cuid, managed {
     addressState       : String(10);
     addressStreet      : String(1000);
     fallDetected       : Boolean;
+    emergencyContacted : Boolean;
 }
