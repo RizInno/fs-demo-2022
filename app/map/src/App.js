@@ -60,7 +60,7 @@ function App() {
 	return (
 		<ThemeProvider>
 			<ShellBar
-				primary-title="Geometry Explorer"
+				primary-title="Field Service Technician Monitoring"
 				notifications-count="5+"
 				show-notifications
 				show-product-switch >
