@@ -26,3 +26,7 @@ code {
     margin: 56px 12px;
     border-radius: 4px;
 }
+
+.sidebar[visible="false"] {
+    display: none;
+}

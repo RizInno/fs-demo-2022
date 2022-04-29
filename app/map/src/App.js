@@ -29,6 +29,9 @@ function App() {
 	const [lat, setLat] = useState(41.5045);
 	const [zoom, setZoom] = useState(3.63);
 	const layer = useRef(null);
+	const url = new URL(window.location.href);
+	const debug = url.searchParams.get("debug");
+	const [sidebar, setSidebar] = useState((debug === "true") ? debug : "false");
 
 	useEffect(() => {
 		if (map.current) return; // initialize map only once
@@ -77,7 +80,7 @@ function App() {
 				alignItems={FlexBoxAlignItems.Center}
 			>
 				<Card>
-					<div className="sidebar">
+					<div className="sidebar" visible={sidebar}>
 						Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
 					</div>
 					<div ref={mapContainer} className="map-container" />
