@@ -210,6 +210,17 @@ export default class LayerManager {
 				point.setData(this._getGeoJson(layerData));
 			}
 		}
+
+		if (data.criticality === LAYER.Critical) {
+			const popup = new Popup({
+				closeButton: true,
+				closeOnClick: false
+			});
+
+			popup.setLngLat([data.locationLong, data.locationLat])
+				.setHTML(getDescription(data))
+				.addTo(this.map);
+		}
 	}
 
 	_getGeoJson(data) {
