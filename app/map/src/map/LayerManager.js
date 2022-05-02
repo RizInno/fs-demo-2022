@@ -101,7 +101,8 @@ const getImage = (map, criticality, isAnimated) => {
 
 const getDescription = data => {
 	return `<strong>${data.personId}'s current location as of ${new Date().toISOString().substring(11, 19)}</strong>
-	<p>${data.addressStreet}, ${data.addressCity}, ${data.addressState} ${data.addressPostalCode}</p>`;
+	<p>${data.addressStreet}, ${data.addressCity}, ${data.addressState} ${data.addressPostalCode}</p>
+	<p id="notification" visible="${data.emergencyContacted ? 'true' : 'false'}">Notification created</p>`;
 };
 
 export default class LayerManager {

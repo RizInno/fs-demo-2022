@@ -30,3 +30,11 @@ code {
 .sidebar[visible="false"] {
     display: none;
 }
+
+#notification {
+    color: blue;
+}
+
+#notification[visible="false"] {
+    display: none;
+}
