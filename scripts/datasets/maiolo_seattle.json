@@ -1,0 +1,18 @@
+{
+    "accelerometerScore": 1.5988311767578125,
+    "accelerometerX": -0.1486053466796875,
+    "accelerometerY": -0.4789581298828125,
+    "accelerometerZ": -0.9712677001953125,
+    "addressCity": "Seattle",
+    "addressPostalCode": "98109",
+    "addressState": "WA",
+    "addressStreet": "I5",
+    "crumbTime": "2022-06-28T19:50:31.000Z",
+    "deviceId": "76F19B03-E2ED-4193-B774-C1D33C393C0A",
+    "emergencyContacted": false,
+    "fallDetected": false,
+    "locationLat": 47.538007,
+    "locationLong": -122.298949,
+    "personId": "Mike Maiolo",
+    "speedMPH": 65.2
+}
