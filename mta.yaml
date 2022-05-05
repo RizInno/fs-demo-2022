@@ -58,6 +58,12 @@ resources:
       config:
         xsappname: fsdemo-${org}-${space}
         tenant-mode: dedicated
-  
+
+  - name: fsdemo-destination
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: destination
+      service-plan: lite
+
   - name: riz-inno-events # Replace this with the reference to your own event bus
     type: org.cloudfoundry.existing-service
