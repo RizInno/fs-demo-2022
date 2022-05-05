@@ -25,13 +25,17 @@ mapboxgl.accessToken = 'pk.eyJ1IjoibWFydGluc3RlbnppZyIsImEiOiJjazV1amZpdGwwZG92M
 function App() {
 	const mapContainer = useRef(null);
 	const map = useRef(null);
-	const [lng, setLng] = useState(-101.4204);
-	const [lat, setLat] = useState(41.5045);
-	const [zoom, setZoom] = useState(3.63);
 	const layer = useRef(null);
+
 	const url = new URL(window.location.href);
 	const debug = url.searchParams.get("debug");
+	const paramLong = url.searchParams.get("long");
+	const paramLat = url.searchParams.get("lat");
+	const paramZoom = url.searchParams.get("zoom");
 	const [sidebar, setSidebar] = useState((debug === "true") ? debug : "false");
+	const [lng, setLng] = useState(paramLong ? parseFloat(paramLong) : -101.4204);
+	const [lat, setLat] = useState(paramLat ? parseFloat(paramLat) : 41.5045);
+	const [zoom, setZoom] = useState(paramZoom ? parseFloat(paramZoom) : 3.63);
 
 	useEffect(() => {
 		if (map.current) return; // initialize map only once
