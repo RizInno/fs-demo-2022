@@ -1,0 +1,18 @@
+{
+    "accelerometerScore": 1.5988311767578125,
+    "accelerometerX": -0.1486053466796875,
+    "accelerometerY": -0.4789581298828125,
+    "accelerometerZ": -0.9712677001953125,
+    "addressCity": "Orlando",
+    "addressPostalCode": "32821",
+    "addressState": "FL",
+    "addressStreet": "5217 Wildflower Rd",
+    "crumbTime": "2022-04-28T19:50:31.000Z",
+    "deviceId": "76F19B03-E2ED-4193-B774-C1D33C393C1C",
+    "emergencyContacted": false,
+    "fallDetected": false,
+    "locationLat": 28.413441,
+    "locationLong": -81.445636,
+    "personId": "Mike Griffin",
+    "speedMPH": 0.0
+}
