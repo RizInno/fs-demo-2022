@@ -13,4 +13,14 @@ This demo takes it a step further and reacts to possible falls. Falls are detect
 4. A simple client application visualizes the current locatiton of all our field service technicians on the map and shows an alert once a fall was detected.
 
 
+# Testing
+To use the .http files you must
+1. Install the VS Code REST Client https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+2. Create a file with name '.env' in the root of this project. That file should contain the following lines (please makes sure to provide the values relevant to your environment):
+```.env
+ S4_URL=<https://yours4system>
+ S4_BASIC_USERNAME=<yours4username>
+ S4_PASSWORD=<yours4password>
+```
+
 
