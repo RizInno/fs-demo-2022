@@ -30,6 +30,8 @@ modules:
     requires:
       - name: fsdemo-db
       - name: fsdemo-uaa
+      - name: fsdemo-destination
+      - name: fsdemo-connectivity
       - name: riz-inno-events # Replace this with the reference to your own event bus
 
   - name: fsdemo-db-deployer
