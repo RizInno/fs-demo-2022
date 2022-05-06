@@ -65,5 +65,11 @@ resources:
       service: destination
       service-plan: lite
 
+  - name: fsdemo-connectivity
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: connectivity
+      service-plan: lite
+
   - name: riz-inno-events # Replace this with the reference to your own event bus
     type: org.cloudfoundry.existing-service
