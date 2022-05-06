@@ -116,6 +116,11 @@ export default class LayerManager {
 			closeOnClick: false
 		});
 
+		this.criticalPopup = new Popup({
+			closeButton: true,
+			closeOnClick: false
+		});
+
 		this._addLayer(LAYER.Positive);
 		this._addLayer(LAYER.Negative);
 		this._addLayer(LAYER.Critical);
@@ -213,12 +218,8 @@ export default class LayerManager {
 		}
 
 		if (data.criticality === LAYER.Critical) {
-			const popup = new Popup({
-				closeButton: true,
-				closeOnClick: false
-			});
-
-			popup.setLngLat([data.locationLong, data.locationLat])
+			this.criticalPopup.remove();
+			this.criticalPopup.setLngLat([data.locationLong, data.locationLat])
 				.setHTML(getDescription(data))
 				.addTo(this.map);
 		}
