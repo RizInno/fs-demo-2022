@@ -78,7 +78,7 @@ class StorageService extends cds.ApplicationService {
 
 			if (!result.notification && data.emergencyContacted) {
 				// Create new notification
-				let shortText = data.personId + 'in an incident';
+				let shortText = data.personId + ' in an incident';
 
 				const record = Object.assign(template, { ShortText: shortText });
 				const notification = await eam.run(INSERT.into(NotifHeadSet).entries([record]));
