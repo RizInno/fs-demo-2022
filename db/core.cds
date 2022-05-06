@@ -8,6 +8,7 @@ namespace riz.inno.example;
 entity Devices {
     key ID           : String(1000);
         notification : String(12);
+        ehs_incident : String(50);
         Crumbs       : Association to many Crumbs
                            on Crumbs.Device = $self;
 }

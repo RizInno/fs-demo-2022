@@ -16,4 +16,5 @@ service StorageService {
                     true
             end                 as isNotificationCreated : Boolean
         };
+    entity Devices as projection on my.Devices;
 }
