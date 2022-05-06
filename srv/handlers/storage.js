@@ -73,6 +73,7 @@ class StorageService extends cds.ApplicationService {
 				await tx.run(INSERT.into(Devices).entries([{
 					ID: data.Device_ID
 				}]));
+				result = await tx.run(SELECT.one.from(Devices).where({ ID: data.Device_ID }));
 			}
 
 			if (!result.notification && data.emergencyContacted) {
