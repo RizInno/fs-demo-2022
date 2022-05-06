@@ -5,6 +5,13 @@ using {
 
 namespace riz.inno.example;
 
+entity Devices {
+    key ID           : String(1000);
+        notification : String(12);
+        Crumbs       : Association to many Crumbs
+                           on Crumbs.Device = $self;
+}
+
 entity Crumbs : cuid, managed {
     crumbTime          : Timestamp;
     locationLong       : Double;
@@ -12,7 +19,6 @@ entity Crumbs : cuid, managed {
     locationAccuracy   : Double;
     speedMPH           : Double;
     personId           : String(1000);
-    deviceId           : String(1000);
     accelerometerScore : Double;
     accelerometerX     : Double;
     accelerometerY     : Double;
@@ -23,4 +29,5 @@ entity Crumbs : cuid, managed {
     addressStreet      : String(1000);
     fallDetected       : Boolean;
     emergencyContacted : Boolean;
+    Device             : Association to one Devices;
 }

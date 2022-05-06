@@ -62,6 +62,13 @@
 				},
 				"approuter": {
 					"kind": "cloudfoundry"
+				},
+				"API_EAM_SERVICE": {
+					"kind": "odata-v2",
+					"model": "srv/external/API_EAM_SERVICE",
+					"credentials": {
+						"destination": "eam-api-service"
+					}
 				}
 			},
 			"db": {
@@ -72,6 +79,15 @@
 				"format": "cloudevents",
 				"publishPrefix": "$namespace/",
 				"subscribePrefix": "$namespace/"
+			},
+			"API_EAM_SERVICE": {
+				"kind": "odata-v2",
+				"model": "srv/external/API_EAM_SERVICE",
+				"credentials": {
+					"url": "http://appsrv16-eam.rizing.io:8000/sap/opu/odata/sap/ZRIZIO_SRV",
+					"username": "<username>",
+					"password": "<password>"
+				}
 			}
 		}
 	}
