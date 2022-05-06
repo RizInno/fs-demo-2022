@@ -29,4 +29,6 @@ mta_archives/
 # .vscode
 # .idea
 
+
 package-lock.json
+.env
