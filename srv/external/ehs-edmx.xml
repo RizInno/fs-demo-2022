@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0"
+  xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+  xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+  xmlns:sap="http://www.sap.com/Protocols/SAPData">
+  <edmx:Reference Uri="https://virtual.appsrv16-eam.rizing.io:443/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='LOCAL')/$value"
+    xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+  </edmx:Reference>
+  <edmx:DataServices m:DataServiceVersion="2.0">
+    <Schema Namespace="API_EHS_REPORT_INCIDENT_SRV" xml:lang="en" sap:schema-version="1"
+      xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+      <Annotation Term="Core.SchemaVersion" String="1.0.0"
+        xmlns="http://docs.oasis-open.org/odata/ns/edm"/>
+      <EntityType Name="Attachment" m:HasStream="true" sap:label="Attachment" sap:content-version="1">
+        <Key>
+          <PropertyRef Name="AttachmentDocumentUUID"/>
+        </Key>
+        <Property Name="AttachmentDocumentUUID" Type="Edm.Guid" Nullable="false" sap:unicode="false" sap:label="Attachment Global Identification" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+        <Property Name="MimeType" Type="Edm.String" Nullable="false" MaxLength="128" sap:unicode="false" sap:label="Attachment MIME Type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+        <Property Name="FileName" Type="Edm.String" Nullable="false" MaxLength="255" sap:unicode="false" sap:label="Attachment File Name" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+      </EntityType>
+      <EntityType Name="Incident" sap:label="Incident" sap:content-version="1">
+        <Key>
+          <PropertyRef Name="IncidentUUID"/>
+        </Key>
+        <Property Name="IncidentUUID" Type="Edm.Guid" Nullable="false" sap:unicode="false" sap:label="Incident Global Identification" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+        <Property Name="IncidentCategory" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Incident Category" sap:creatable="false" sap:updatable="false"/>
+        <Property Name="IncidentStatus" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="Incident Status" sap:creatable="false" sap:updatable="false"/>
+        <Property Name="IncidentTitle" Type="Edm.String" Nullable="false" MaxLength="80" sap:unicode="false" sap:label="Incident Title" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+        <Property Name="IncidentUTCDateTime" Type="Edm.DateTimeOffset" Nullable="false" Precision="0" sap:unicode="false" sap:label="Incident Start Date/Time (UTC)" sap:updatable="false"/>
+        <Property Name="IncidentLocationDescription" Type="Edm.String" Nullable="false" MaxLength="999999" sap:unicode="false" sap:label="Additional Description of Incident Location" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+        <Property Name="EHSLocationUUID" Type="Edm.Guid" Nullable="false" sap:unicode="false" sap:label="Location Global Identification" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+        <NavigationProperty Name="to_Attachments" Relationship="API_EHS_REPORT_INCIDENT_SRV.Incident_Attachments" FromRole="FromRole_Incident_Attachments" ToRole="ToRole_Incident_Attachments"/>
+        <NavigationProperty Name="to_Persons" Relationship="API_EHS_REPORT_INCIDENT_SRV.Incident_Persons" FromRole="FromRole_Incident_Persons" ToRole="ToRole_Incident_Persons"/>
+        <NavigationProperty Name="to_Location" Relationship="API_EHS_REPORT_INCIDENT_SRV.Incident_Location" FromRole="FromRole_Incident_Location" ToRole="ToRole_Incident_Location"/>
+      </EntityType>
+      <EntityType Name="Location" sap:label="Location" sap:content-version="1">
+        <Key>
+          <PropertyRef Name="LocationUUID"/>
+        </Key>
+        <Property Name="LocationUUID" Type="Edm.Guid" Nullable="false" sap:unicode="false" sap:label="Location Global Identification" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+        <Property Name="LocationName" Type="Edm.String" Nullable="false" MaxLength="60" sap:unicode="false" sap:label="Location Name" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+        <Property Name="LocationType" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="Location Type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+        <Property Name="LocationLatitude" Type="Edm.Decimal" Nullable="false" Precision="15" Scale="12" sap:unicode="false" sap:label="Geo Location for Latitude" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+        <Property Name="LocationLongtitude" Type="Edm.Decimal" Nullable="false" Precision="15" Scale="12" sap:unicode="false" sap:label="Geo Location for Longtitude" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+      </EntityType>
+      <EntityType Name="Person" sap:label="Person" sap:content-version="1">
+        <Key>
+          <PropertyRef Name="PersonInvolvedRole"/>
+          <PropertyRef Name="PersonInvolvedUUID"/>
+        </Key>
+        <Property Name="PersonFullName" Type="Edm.String" Nullable="false" MaxLength="80" sap:unicode="false" sap:label="Person Name" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+        <Property Name="PersonInvolvedRole" Type="Edm.String" Nullable="false" MaxLength="21" sap:unicode="false" sap:label="Person Role" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+        <Property Name="PersonInvolvedUUID" Type="Edm.Guid" Nullable="false" sap:unicode="false" sap:label="Person Global Identification" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+      </EntityType>
+      <Association Name="Incident_Attachments" sap:content-version="1">
+        <End Type="API_EHS_REPORT_INCIDENT_SRV.Incident" Multiplicity="1" Role="FromRole_Incident_Attachments"/>
+        <End Type="API_EHS_REPORT_INCIDENT_SRV.Attachment" Multiplicity="*" Role="ToRole_Incident_Attachments"/>
+        <ReferentialConstraint>
+          <Principal Role="FromRole_Incident_Attachments">
+            <PropertyRef Name="IncidentUUID"/>
+          </Principal>
+          <Dependent Role="ToRole_Incident_Attachments">
+            <PropertyRef Name="AttachmentDocumentUUID"/>
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="Incident_Location" sap:content-version="1">
+        <End Type="API_EHS_REPORT_INCIDENT_SRV.Incident" Multiplicity="*" Role="FromRole_Incident_Location"/>
+        <End Type="API_EHS_REPORT_INCIDENT_SRV.Location" Multiplicity="0..1" Role="ToRole_Incident_Location"/>
+        <ReferentialConstraint>
+          <Principal Role="FromRole_Incident_Location">
+            <PropertyRef Name="IncidentUUID"/>
+          </Principal>
+          <Dependent Role="ToRole_Incident_Location">
+            <PropertyRef Name="LocationUUID"/>
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="Incident_Persons" sap:content-version="1">
+        <End Type="API_EHS_REPORT_INCIDENT_SRV.Incident" Multiplicity="1" Role="FromRole_Incident_Persons"/>
+        <End Type="API_EHS_REPORT_INCIDENT_SRV.Person" Multiplicity="*" Role="ToRole_Incident_Persons"/>
+        <ReferentialConstraint>
+          <Principal Role="FromRole_Incident_Persons">
+            <PropertyRef Name="IncidentUUID"/>
+          </Principal>
+          <Dependent Role="ToRole_Incident_Persons">
+            <PropertyRef Name="PersonInvolvedUUID"/>
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <EntityContainer Name="API_EHS_REPORT_INCIDENT_SRV_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+        <EntitySet Name="A_Attachment" EntityType="API_EHS_REPORT_INCIDENT_SRV.Attachment" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+        <EntitySet Name="A_Incident" EntityType="API_EHS_REPORT_INCIDENT_SRV.Incident" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+        <EntitySet Name="A_Location" EntityType="API_EHS_REPORT_INCIDENT_SRV.Location" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+        <EntitySet Name="A_Person" EntityType="API_EHS_REPORT_INCIDENT_SRV.Person" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+        <AssociationSet Name="Incident_PersonsSet" Association="API_EHS_REPORT_INCIDENT_SRV.Incident_Persons" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+          <End EntitySet="A_Incident" Role="FromRole_Incident_Persons"/>
+          <End EntitySet="A_Person" Role="ToRole_Incident_Persons"/>
+        </AssociationSet>
+        <AssociationSet Name="Incident_AttachmentsSet" Association="API_EHS_REPORT_INCIDENT_SRV.Incident_Attachments" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+          <End EntitySet="A_Incident" Role="FromRole_Incident_Attachments"/>
+          <End EntitySet="A_Attachment" Role="ToRole_Incident_Attachments"/>
+        </AssociationSet>
+        <AssociationSet Name="Incident_LocationSet" Association="API_EHS_REPORT_INCIDENT_SRV.Incident_Location" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+          <End EntitySet="A_Incident" Role="FromRole_Incident_Location"/>
+          <End EntitySet="A_Location" Role="ToRole_Incident_Location"/>
+        </AssociationSet>
+      </EntityContainer>
+      <Annotations Target="API_EHS_REPORT_INCIDENT_SRV.API_EHS_REPORT_INCIDENT_SRV_Entities/A_Incident"
+        xmlns="http://docs.oasis-open.org/odata/ns/edm">
+        <Annotation Term="Capabilities.ReadRestrictions">
+          <Record>
+            <PropertyValue Property="Description" String="Gets a list of incidents by filter criteria."/>
+            <PropertyValue Property="LongDescription" String="Gets a list of incidents by filter criteria. You can search for incidents by incident category, incident date, incident title, and incident status. You can also sort the list by date, status, and category."/>
+            <PropertyValue Property="ReadByKeyRestrictions">
+              <Record>
+                <PropertyValue Property="Description" String="Gets incident details by global identifier (IncidentUUID)."/>
+                <PropertyValue Property="LongDescription" String="Gets incident details by global identifier (IncidentUUID). Gets details from the incident record for which the IncidentUUID matches the provided key or returns nothing if no IncidentUUID matches the provided key."/>
+              </Record>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="API_EHS_REPORT_INCIDENT_SRV.API_EHS_REPORT_INCIDENT_SRV_Entities/A_Attachment"
+        xmlns="http://docs.oasis-open.org/odata/ns/edm">
+        <Annotation Term="Capabilities.ReadRestrictions">
+          <Record>
+            <PropertyValue Property="Description" String="Gets a list of all attachments."/>
+            <PropertyValue Property="LongDescription" String="Gets a list of all attachments in the context of the concrete incident.It is not possible to get a list of all attachments without the context of an incident. Use the following operation instead: GET /A_Incident({IncidentUUID})/to_Attachments."/>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="API_EHS_REPORT_INCIDENT_SRV.API_EHS_REPORT_INCIDENT_SRV_Entities/A_Location"
+        xmlns="http://docs.oasis-open.org/odata/ns/edm">
+        <Annotation Term="Capabilities.ReadRestrictions">
+          <Record>
+            <PropertyValue Property="Description" String="Gets a list of all locations."/>
+            <PropertyValue Property="LongDescription" String="Gets a list of all existing locations. The list of locations is a flat list where the locations are sorted alphabetically by name."/>
+            <PropertyValue Property="ReadByKeyRestrictions">
+              <Record>
+                <PropertyValue Property="Description" String="Gets details of the incident location by global identifier (LocationUUID)."/>
+                <PropertyValue Property="LongDescription" String="Gets details of the location record for which the LocationUUID matches the provided key or returns nothing if no LocationUUID matches the provided key."/>
+              </Record>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="API_EHS_REPORT_INCIDENT_SRV.API_EHS_REPORT_INCIDENT_SRV_Entities/A_Person"
+        xmlns="http://docs.oasis-open.org/odata/ns/edm">
+        <Annotation Term="Capabilities.ReadRestrictions">
+          <Record>
+            <PropertyValue Property="Description" String="Gets a list with all persons assigned to an incident."/>
+            <PropertyValue Property="LongDescription" String="It is not possible to get a list of all persons without the context of the incidents that they were involved in. Use the following operation instead: GET /A_Incident({IncidentUUID})/to_Persons."/>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="API_EHS_REPORT_INCIDENT_SRV.API_EHS_REPORT_INCIDENT_SRV_Entities/A_Incident"
+        xmlns="http://docs.oasis-open.org/odata/ns/edm">
+        <Annotation Term="Capabilities.InsertRestrictions">
+          <Record>
+            <PropertyValue Property="Description" String="Creates an incident."/>
+            <PropertyValue Property="LongDescription" String="Creates a new incident. For this operation, the incident date and title parameters are required. To assign a person to an incident, use the operation POST /A_Incident( {IncidentUUID})/to_Persons. To attach a document, use the operation POST /A_Incident({IncidentUUID})/to_Attachments."/>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="API_EHS_REPORT_INCIDENT_SRV.API_EHS_REPORT_INCIDENT_SRV_Entities/A_Attachment"
+        xmlns="http://docs.oasis-open.org/odata/ns/edm">
+        <Annotation Term="Capabilities.InsertRestrictions">
+          <Record>
+            <PropertyValue Property="Description" String="Uploads an attachment without assigning it to an incident."/>
+            <PropertyValue Property="LongDescription" String="It is not possible to create an attachment without assigning it to an incident. Use the following operation instead: POST /A_Incident( {IncidentUUID})/to_Attachments."/>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="API_EHS_REPORT_INCIDENT_SRV.API_EHS_REPORT_INCIDENT_SRV_Entities/A_Person"
+        xmlns="http://docs.oasis-open.org/odata/ns/edm">
+        <Annotation Term="Capabilities.InsertRestrictions">
+          <Record>
+            <PropertyValue Property="Description" String="Creates a person record without assigning it to an incident."/>
+            <PropertyValue Property="LongDescription" String="It is not possible to create a person record without assigning it to an incident. Use the following operation instead: POST /A_Incident({IncidentUUID})/to_Persons."/>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="API_EHS_REPORT_INCIDENT_SRV.API_EHS_REPORT_INCIDENT_SRV_Entities/A_Incident"
+        xmlns="http://docs.oasis-open.org/odata/ns/edm">
+        <Annotation Term="Capabilities.NavigationRestrictions">
+          <Record>
+            <PropertyValue Property="RestrictedProperties">
+              <Collection>
+                <Record>
+                  <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_Attachments"/>
+                  <PropertyValue Property="ReadRestrictions">
+                    <Record>
+                      <PropertyValue Property="Description" String="Gets a list of documents attached to an incident."/>
+                      <PropertyValue Property="LongDescription" String="Gets a list of documents that have been attached to an incident."/>
+                    </Record>
+                  </PropertyValue>
+                </Record>
+                <Record>
+                  <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_Attachments"/>
+                  <PropertyValue Property="InsertRestrictions">
+                    <Record>
+                      <PropertyValue Property="Description" String="Attaches a document to an incident."/>
+                      <PropertyValue Property="LongDescription" String="Attaches a document to an incident. Uploads an attachment and assigns it to an incident. You can add one attachment per operation call. To add multiple attachments, execute separate calls."/>
+                    </Record>
+                  </PropertyValue>
+                </Record>
+                <Record>
+                  <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_Persons"/>
+                  <PropertyValue Property="ReadRestrictions">
+                    <Record>
+                      <PropertyValue Property="Description" String="Gets a list of all persons involved in an incident."/>
+                      <PropertyValue Property="LongDescription" String="Gets a list of all persons involved in an incident. Gets a list of all persons that were involved in a specific incident."/>
+                    </Record>
+                  </PropertyValue>
+                </Record>
+                <Record>
+                  <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_Persons"/>
+                  <PropertyValue Property="InsertRestrictions">
+                    <Record>
+                      <PropertyValue Property="Description" String="Assigns a person to an incident."/>
+                      <PropertyValue Property="LongDescription" String="Assigns a person to an incident. The role of the involved person must be provided for this operation."/>
+                    </Record>
+                  </PropertyValue>
+                </Record>
+                <Record>
+                  <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_Location"/>
+                  <PropertyValue Property="ReadRestrictions">
+                    <Record>
+                      <PropertyValue Property="Description" String="Gets the incident location."/>
+                      <PropertyValue Property="LongDescription" String="Gets the incident location. Gets the location details assigned to an incident or returns nothing if no location is specified."/>
+                    </Record>
+                  </PropertyValue>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <atom:link rel="self" href="https://virtual.appsrv16-eam.rizing.io:443/sap/opu/odata/sap/API_EHS_REPORT_INCIDENT_SRV/$metadata"
+        xmlns:atom="http://www.w3.org/2005/Atom"/>
+      <atom:link rel="latest-version" href="https://virtual.appsrv16-eam.rizing.io:443/sap/opu/odata/sap/API_EHS_REPORT_INCIDENT_SRV/$metadata"
+        xmlns:atom="http://www.w3.org/2005/Atom"/>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
