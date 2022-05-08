@@ -1,7 +1,7 @@
 const cds = require('@sap/cds');
 cds.env.features.fetch_csrf = true;
 
-const template = {
+const eamTemplate = {
 	"Planplant": "1701",
 	"LocAcc": "000000022307",
 	"Equipment": "10000438",
@@ -22,6 +22,15 @@ const template = {
 	"CompCode": "USEA",
 	"Maintactytype": "250"
 };
+
+const ehsTemplate = {
+	"IncidentCategory": "001",
+	"IncidentTitle": "Sapphire Prep",
+	"IncidentUTCDateTime": "/Date(1652306735000+0000)/",
+	"IncidentLocationDescription": "GPS Lat Long"
+  };
+
+
 
 /**
  * StorageService handler
@@ -46,8 +55,13 @@ class StorageService extends cds.ApplicationService {
 		let messaging = await cds.connect.to("messaging");
 		const db = await cds.connect.to("db");
 		const { Devices } = db.entities;
+	
+		// Connect to SAP S/4 services
+		const ehs = await cds.connect.to("API_EHS_REPORT_INCIDENT_SRV");
 		const eam = await cds.connect.to("API_EAM_SERVICE");
+		
 		const { NotifHeadSet } = eam.entities;
+		const { A_Incident } = ehs.entities;
 		const { Crumbs } = this.entities;
 
 		// To output the message we can initiate through CAP
@@ -77,10 +91,27 @@ class StorageService extends cds.ApplicationService {
 			}
 
 			if (!result.notification && data.emergencyContacted) {
+
 				// Create new notification
-				const record = Object.assign(template, { ShortText: data.Device_ID });
+				let shortText = data.personId + ' in an incident';
+
+				// Create EHS incident
+				let ehsRecord = ehsTemplate;
+				ehsRecord.IncidentTitle = shortText;
+				ehsRecord.IncidentUTCDateTime = new Date().toISOString()
+				ehsRecord.IncidentLocationDescription = 'An incident has been reported on device: ' + data.Device_ID + ' at GPS location: ' + data.locationLat + ',' + data.locationLong + ' with an Accelerometer Score of: ' + data.accelerometerScore + '.'
+
+				const EhsIncident = await ehs.run(INSERT.into(A_Incident).entries([ehsRecord]));
+
+				// Create EAM Notification
+				const record = Object.assign(eamTemplate, { ShortText: shortText });
 				const notification = await eam.run(INSERT.into(NotifHeadSet).entries([record]));
-				await tx.run(UPDATE(Devices).with({ notification: notification.NotifNo }).where({ ID: data.Device_ID }));
+
+				// Update Device entity with SAP info
+				await tx.run(UPDATE(Devices).with({ notification: notification.NotifNo,ehsincident: EhsIncident.IncidentUUID }).where({ ID: data.Device_ID }));
+
+
+
 			}
 		});
 

@@ -1,5 +1,5 @@
 
-@server=https://fsdemo-srv-sbx.cfapps.us10.hana.ondemand.com/
+@server={{$dotenv %CF_SRV_URL}}
 @service=storage/
 
 
@@ -48,4 +48,15 @@ Content-Type: application/json
 }
 
 ### Read all Crumbs
-GET {{server}}{{service}}Crumbs
+GET {{server}}{{service}}Crumbs?$top=5
+
+### Read all devices
+GET {{server}}{{service}}Devices
+
+### Delete Martin's phone
+PATCH {{server}}{{service}}Devices('76F19B03-E2ED-4193-B774-C1D33C393C05')
+Content-Type: application/json
+
+{
+"notification": null
+}

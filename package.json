@@ -69,6 +69,14 @@
 					"credentials": {
 						"destination": "eam-api-service"
 					}
+				},
+				"API_EHS_REPORT_INCIDENT_SRV": {
+					"kind": "odata-v2",
+					"model": "srv/external/ehs-edmx",
+					"credentials": {
+						"destination": "ehs-api-service",
+						"path": "/sap/opu/odata/sap/API_EHS_REPORT_INCIDENT_SRV"
+					}
 				}
 			},
 			"db": {
