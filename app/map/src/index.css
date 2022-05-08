@@ -38,3 +38,11 @@ code {
 #notification[visible="false"] {
     display: none;
 }
+
+#ehsincident {
+    color: blue;
+}
+
+#ehsincident[visible="false"] {
+    display: none;
+}
