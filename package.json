@@ -96,6 +96,15 @@
 					"username": "<username>",
 					"password": "<password>"
 				}
+			},
+			"API_EHS_REPORT_INCIDENT_SRV": {
+				"kind": "odata-v2",
+				"model": "srv/external/ehs-edmx",
+				"credentials": {
+					"url": "http://appsrv16-eam.rizing.io:8000/sap/opu/odata/sap/API_EHS_REPORT_INCIDENT_SRV",
+					"username": "<username>",
+					"password": "<password>"
+				}
 			}
 		}
 	}

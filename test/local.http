@@ -90,6 +90,7 @@ Content-Type: application/json
        "crumbTime": "{{$datetime iso8601}}",
        "deviceId": "76F19B03-E2ED-4193-B774-C1D33C393C05",
        "fallDetected": true,
+	   "emergencyContacted": false,
        "locationLat": 14.442707240846062,
        "locationLong": 120.97039049356579,
        "personId": "Jhodel",

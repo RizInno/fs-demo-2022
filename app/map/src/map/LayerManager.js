@@ -104,7 +104,6 @@ const getDescription = data => {
 	<p>${data.addressStreet},<br>${data.addressCity},${data.addressState} ${data.addressPostalCode}</p>
 	<p id="ehsincident" visible="${data.isNotificationCreated ? 'true' : 'false'}"><strong>EHS Incident:</strong> ${data.ehsincident}</p>
 	<p id="notification" visible="${data.isNotificationCreated ? 'true' : 'false'}"><strong>Notification:</strong> ${data.notification}</p>`;
-	
 };
 
 export default class LayerManager {
@@ -219,7 +218,7 @@ export default class LayerManager {
 			}
 		}
 
-		if (data.criticality === LAYER.Critical) {
+		if (data.criticality === LAYER.Critical || data.criticality === LAYER.Negative) {
 			this.criticalPopup.remove();
 			this.criticalPopup.setLngLat([data.locationLong, data.locationLat])
 				.setHTML(getDescription(data))
