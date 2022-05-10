@@ -28,7 +28,7 @@ const ehsTemplate = {
 	"IncidentTitle": "Sapphire Prep",
 	"IncidentUTCDateTime": "/Date(1652306735000+0000)/",
 	"IncidentLocationDescription": "GPS Lat Long"
-  };
+};
 
 
 
@@ -55,11 +55,11 @@ class StorageService extends cds.ApplicationService {
 		let messaging = await cds.connect.to("messaging");
 		const db = await cds.connect.to("db");
 		const { Devices } = db.entities;
-	
+
 		// Connect to SAP S/4 services
 		const ehs = await cds.connect.to("API_EHS_REPORT_INCIDENT_SRV");
 		const eam = await cds.connect.to("API_EAM_SERVICE");
-		
+
 		const { NotifHeadSet } = eam.entities;
 		const { A_Incident } = ehs.entities;
 		const { Crumbs } = this.entities;
@@ -98,8 +98,8 @@ class StorageService extends cds.ApplicationService {
 				// Create EHS incident
 				let ehsRecord = ehsTemplate;
 				ehsRecord.IncidentTitle = shortText;
-				ehsRecord.IncidentUTCDateTime = new Date().toISOString()
-				ehsRecord.IncidentLocationDescription = 'An incident has been reported on device: ' + data.Device_ID + ' at GPS location: ' + data.locationLat + ',' + data.locationLong + ' with an Accelerometer Score of: ' + data.accelerometerScore + '.'
+				ehsRecord.IncidentUTCDateTime = new Date().toISOString();
+				ehsRecord.IncidentLocationDescription = 'An incident has been reported on device: ' + data.Device_ID + ' at GPS location: ' + data.locationLat + ',' + data.locationLong + ' with an Accelerometer Score of: ' + data.accelerometerScore + '.';
 
 				const EhsIncident = await ehs.run(INSERT.into(A_Incident).entries([ehsRecord]));
 
@@ -108,10 +108,12 @@ class StorageService extends cds.ApplicationService {
 				const notification = await eam.run(INSERT.into(NotifHeadSet).entries([record]));
 
 				// Update Device entity with SAP info
-				await tx.run(UPDATE(Devices).with({ notification: notification.NotifNo,ehsincident: EhsIncident.IncidentUUID }).where({ ID: data.Device_ID }));
+				await tx.run(UPDATE(Devices).with({ notification: notification.NotifNo, ehsincident: EhsIncident.IncidentUUID }).where({ ID: data.Device_ID }));
+			}
 
-
-
+			if (result.notification && !data.emergencyContacted) {
+				// Clear Notification ID and ESH Incident ID
+				await tx.run(UPDATE(Devices).with({ notification: null, ehsincident: null }).where({ ID: data.Device_ID }));
 			}
 		});
 
