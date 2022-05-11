@@ -17,39 +17,14 @@
 	"devDependencies": {
 		"@sap/eslint-plugin-cds": "^2.3.5",
 		"eslint": "^8.13.0",
+		"eslint-html-reporter": "^0.7.4",
 		"sqlite3": "^5.0.2"
 	},
 	"scripts": {
 		"start": "cds run",
-		"build": "cd app/map && npm install --force && npm run build && cd ../.."
-	},
-	"eslintConfig": {
-		"extends": [
-			"eslint:recommended",
-			"plugin:@sap/cds/recommended"
-		],
-		"env": {
-			"es2020": true,
-			"node": true,
-			"jest": true,
-			"mocha": true
-		},
-		"globals": {
-			"SELECT": true,
-			"INSERT": true,
-			"UPDATE": true,
-			"DELETE": true,
-			"CREATE": true,
-			"DROP": true,
-			"CDL": true,
-			"CQL": true,
-			"CXL": true,
-			"cds": true
-		},
-		"rules": {
-			"no-console": "off",
-			"require-atomic-updates": "off"
-		}
+		"build": "cd app/map && npm install --force && npm run build && cd ../..",
+		"lint": "eslint . --max-warnings 0",
+		"lint-ci": "eslint . --max-warnings 0 -f node_modules/eslint-html-reporter/reporter.js -o ./report/lint-results.html"
 	},
 	"cds": {
 		"requires": {

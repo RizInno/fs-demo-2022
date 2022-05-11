@@ -1,4 +1,5 @@
-const cds = require('@sap/cds');
+/* eslint-disable no-console */
+const cds = require("@sap/cds");
 cds.env.features.fetch_csrf = true;
 
 const eamTemplate = {
@@ -30,8 +31,6 @@ const ehsTemplate = {
 	"IncidentLocationDescription": "GPS Lat Long"
 };
 
-
-
 /**
  * StorageService handler
  */
@@ -61,19 +60,16 @@ class StorageService extends cds.ApplicationService {
 		const eam = await cds.connect.to("API_EAM_SERVICE");
 
 		const { NotifHeadSet } = eam.entities;
+		// eslint-disable-next-line camelcase
 		const { A_Incident } = ehs.entities;
 		const { Crumbs } = this.entities;
 
 		// To output the message we can initiate through CAP
-		messaging.on('gpslocation', async msg => {
-			//console.log('===> Received message on topic (riz/inno/events/gpslocation): ', msg)
-			//console.log('Message sent to clients', msg.data)
-
-			await this.post('Crumbs', msg.data);
-
+		messaging.on("gpslocation", async message => {
+			await this.post("Crumbs", message.data);
 		});
 
-		this.before('CREATE', 'Crumbs', async context => {
+		this.before("CREATE", "Crumbs", async context => {
 			const { data } = context;
 			const tx = db.tx(context);
 
@@ -93,13 +89,16 @@ class StorageService extends cds.ApplicationService {
 			if (!result.notification && data.emergencyContacted) {
 
 				// Create new notification
-				let shortText = data.personId + ' in an incident';
+				let shortText = data.personId + " in an incident";
 
 				// Create EHS incident
 				let ehsRecord = ehsTemplate;
 				ehsRecord.IncidentTitle = shortText;
 				ehsRecord.IncidentUTCDateTime = new Date().toISOString();
-				ehsRecord.IncidentLocationDescription = 'An incident has been reported on device: ' + data.Device_ID + ' at GPS location: ' + data.locationLat + ',' + data.locationLong + ' with an Accelerometer Score of: ' + data.accelerometerScore + '.';
+				ehsRecord.IncidentLocationDescription = "An incident has been reported on device: "
+					+ data.Device_ID + " at GPS location: " + data.locationLat + ","
+					+ data.locationLong + " with an Accelerometer Score of: "
+					+ data.accelerometerScore + ".";
 
 				const EhsIncident = await ehs.run(INSERT.into(A_Incident).entries([ehsRecord]));
 
@@ -108,23 +107,33 @@ class StorageService extends cds.ApplicationService {
 				const notification = await eam.run(INSERT.into(NotifHeadSet).entries([record]));
 
 				// Update Device entity with SAP info
-				await tx.run(UPDATE(Devices).with({ notification: notification.NotifNo, ehsincident: EhsIncident.IncidentUUID }).where({ ID: data.Device_ID }));
+				await tx.run(UPDATE(Devices)
+					.with({
+						notification: notification.NotifNo,
+						ehsincident: EhsIncident.IncidentUUID
+					})
+					.where({ ID: data.Device_ID }));
 			}
 
 			if (result.notification && !data.emergencyContacted) {
 				// Clear Notification ID and ESH Incident ID
-				await tx.run(UPDATE(Devices).with({ notification: null, ehsincident: null }).where({ ID: data.Device_ID }));
+				await tx.run(UPDATE(Devices)
+					.with({
+						notification: null,
+						ehsincident: null
+					})
+					.where({ ID: data.Device_ID }));
 			}
 		});
 
 
 		// We are using this event handler to send the stored Crumbs to all connected clients
-		this.after(['CREATE'], 'Crumbs', async (data) => {
-			console.log('After CREATE Crumbs', data);
+		this.after(["CREATE"], "Crumbs", async (data) => {
+			console.log("After CREATE Crumbs", data);
 			const result = await this.run(SELECT.one.from(Crumbs).where({ ID: data.ID }));
 
 			this.sendMessageToConnectedClients(result);
-			console.log('Message sent to clients!');
+			console.log("Message sent to clients!");
 		});
 
 		// ensure to call super.init()
@@ -133,4 +142,5 @@ class StorageService extends cds.ApplicationService {
 	}
 
 }
+
 module.exports = { StorageService };

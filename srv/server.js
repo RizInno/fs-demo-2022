@@ -1,29 +1,29 @@
-const cds = require('@sap/cds')
-const { WebSocket } = require('ws')
+/* eslint-disable no-console */
+const cds = require("@sap/cds");
+const { WebSocketServer } = require("ws");
 
 // WebSocket library
-const wss = new WebSocket.Server({ noServer: true });
-
+const wss = new WebSocketServer({ noServer: true });
 
 // react on bootstrapping events...
-cds.on('listening', (cdsServer) => {
-    console.log('--> listening')
+cds.on("listening", ({ server }) => {
+	console.log("--> listening");
 
-    cdsServer.server.on('upgrade', function upgrade(request, socket, head) {
+	server.on("upgrade", (request, socket, head) => {
 
-        wss.handleUpgrade(request, socket, head, function done(ws) {
-            console.log("WSS HandleUpgrade ");
-            wss.emit('connection', ws, request);
-        });
+		wss.handleUpgrade(request, socket, head, ws => {
+			console.log("WSS HandleUpgrade");
+			wss.emit("connection", ws, request);
+		});
 
-    });
+	});
 
-    global.wss = wss;
+	global.wss = wss;
 
-})
+});
+
 // handle and override options
-module.exports = (o) => {
-    //o.from = 'srv/precompiled-csn.json'
-    //o.app = require('express')()
-    return cds.server(o) //> delegate to default server.js
-}
+module.exports = (options) => {
+	// delegate to default server.js
+	return cds.server(options);
+};

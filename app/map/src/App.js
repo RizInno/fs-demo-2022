@@ -32,7 +32,7 @@ function App() {
 	const paramLong = url.searchParams.get("long");
 	const paramLat = url.searchParams.get("lat");
 	const paramZoom = url.searchParams.get("zoom");
-	const [sidebar, setSidebar] = useState((debug === "true") ? debug : "false");
+	const [sidebar] = useState((debug === "true") ? debug : "false");
 	const [lng, setLng] = useState(paramLong ? parseFloat(paramLong) : -101.4204);
 	const [lat, setLat] = useState(paramLat ? parseFloat(paramLat) : 41.5045);
 	const [zoom, setZoom] = useState(paramZoom ? parseFloat(paramZoom) : 3.63);
