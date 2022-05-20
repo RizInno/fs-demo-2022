@@ -35,8 +35,8 @@ entity Crumbs : cuid, managed {
 
 @cds.persistence.exists
 @readonly entity Trails {
-    deviceId  : String(1000);
-    personId  : String(1000);
-    crumbDate : Date;
+    key deviceId  : String(1000);
+    key personId  : String(1000);
+    key crumbDate : Date;
     geoline   : LargeString;
 }
