@@ -1,0 +1,15 @@
+{
+    "role": {
+        "name": "consumption",
+        "schema_privileges": [
+            {
+                "privileges": [
+                    "SELECT METADATA",
+                    "SELECT CDS METADATA",
+                    "SELECT",
+                    "EXECUTE"
+                ]
+            }
+        ]
+    }
+}
