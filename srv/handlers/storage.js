@@ -49,11 +49,15 @@ class StorageService extends cds.ApplicationService {
 
 	}
 
-
+	/**
+	 * Initializes the service
+	 */
 	async init() {
-		let messaging = await cds.connect.to("messaging");
-		const db = await cds.connect.to("db");
-		const { Devices } = db.entities;
+
+
+		let messaging = await cds.connect.to("messaging"); // Connection to messaging service
+		const db = await cds.connect.to("db"); // Connection to database service
+		const { Devices } = db.entities; // Reference to Devices entity in database
 
 		// Connect to SAP S/4 services
 		const ehs = await cds.connect.to("API_EHS_REPORT_INCIDENT_SRV");
@@ -69,29 +73,35 @@ class StorageService extends cds.ApplicationService {
 			await this.post("Crumbs", message.data);
 		});
 
+
+		/**
+		 * Before insert hook
+		 */
 		this.before("CREATE", "Crumbs", async context => {
 			const { data } = context;
 			const tx = db.tx(context);
 
 			data.Device_ID = data.deviceId;
 
-			let result;
-			result = await tx.run(SELECT.one.from(Devices).where({ ID: data.Device_ID }));
+			// Check if Device record already exists
+			let result = await tx.run(SELECT.one.from(Devices).where({ ID: data.Device_ID }));
 
 			if (!result) {
-				// Create new device
+				// Create new device record
 				await tx.run(INSERT.into(Devices).entries([{
 					ID: data.Device_ID
 				}]));
 				result = await tx.run(SELECT.one.from(Devices).where({ ID: data.Device_ID }));
 			}
 
+			// If a the end user status is red and the message has not been processed yet
 			if (!result.notification && data.emergencyContacted) {
 
 				// Create new notification
 				let shortText = data.personId + " in an incident";
 
-				// Create EHS incident
+				// -- Create EHS incident
+				// Assemble EHS incident data
 				let ehsRecord = ehsTemplate;
 				ehsRecord.IncidentTitle = shortText;
 				ehsRecord.IncidentUTCDateTime = new Date().toISOString();
@@ -100,13 +110,14 @@ class StorageService extends cds.ApplicationService {
 					+ data.locationLong + " with an Accelerometer Score of: "
 					+ data.accelerometerScore + ".";
 
+				// Create EHS incident in system
 				const EhsIncident = await ehs.run(INSERT.into(A_Incident).entries([ehsRecord]));
 
-				// Create EAM Notification
+				// -- Create EAM Notification
 				const record = Object.assign(eamTemplate, { ShortText: shortText });
 				const notification = await eam.run(INSERT.into(NotifHeadSet).entries([record]));
 
-				// Update Device entity with SAP info
+				// -- Update Device entity with SAP info
 				await tx.run(UPDATE(Devices)
 					.with({
 						notification: notification.NotifNo,
@@ -115,6 +126,7 @@ class StorageService extends cds.ApplicationService {
 					.where({ ID: data.Device_ID }));
 			}
 
+			// Clear Device Table of emergency status if the Phone app has been reset
 			if (result.notification && !data.emergencyContacted) {
 				// Clear Notification ID and ESH Incident ID
 				await tx.run(UPDATE(Devices)
@@ -126,8 +138,10 @@ class StorageService extends cds.ApplicationService {
 			}
 		});
 
-
-		// We are using this event handler to send the stored Crumbs to all connected clients
+		/**
+		 * After insert hook
+		 * We are using this event handler to send the stored Crumbs to all connected clients
+		 */
 		this.after(["CREATE"], "Crumbs", async (data) => {
 			console.log("After CREATE Crumbs", data);
 			const result = await this.run(SELECT.one.from(Crumbs).where({ ID: data.ID }));
