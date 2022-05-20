@@ -19,4 +19,5 @@ service StorageService {
         };
 
     entity Devices as projection on my.Devices;
+    entity Trails  as projection on my.Trails;
 }
