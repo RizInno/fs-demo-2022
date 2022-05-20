@@ -46,10 +46,28 @@ The data model is simple and aligns with the IoT informationation we receive fro
 <img src="./doc/images/data_model/cds.png" alt="CDS Data Model" width="50%"/>
 
 
+# ReCAP 2022 Presentation/Lessons Learned
+- Demo & Business Overview based on README.md
+- Download environment cf extension
+- Web Sockets
+    - Easy to implement on client and server and good value
+    - Implementation in server.js and storage.js handler
+- Messaging
+    - AMQP vs. WebHooks (especially around local testing)
+        - See scripts show_cap_processes.sh / kill_cap_processes.sh
+- Geospatial DataTypes
+    - No testing unless HANA as DB
+    - 
+
 
 
 # Testing
-To use the .http files you must
+## To run the application locally
+1. Generate a default-env.json in the root of the project
+    - The easiest way is to use the cloud foundry [CLI extension](https://github.com/saphanaacademy/DefaultEnv) provided by the SAP HANA Accademy. It allows for a command of 'cf de [service name]'
+
+## To use the .http files 
+...you must
 1. Install the VS Code REST Client https://marketplace.visualstudio.com/items?itemName=humao.rest-client
 2. Create a file with name '.env' in the root of this project. That file should contain the following lines (please makes sure to provide the values relevant to your environment):
 ```.env

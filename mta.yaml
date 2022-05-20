@@ -50,6 +50,8 @@ resources:
     parameters:
       service: hana # or 'hanatrial' on trial landscapes
       service-plan: hdi-shared
+      config:
+        schema: fsdemo
 
   - name: fsdemo-uaa
     type: org.cloudfoundry.managed-service

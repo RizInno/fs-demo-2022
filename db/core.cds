@@ -32,3 +32,11 @@ entity Crumbs : cuid, managed {
     emergencyContacted : Boolean;
     Device             : Association to one Devices;
 }
+
+@cds.persistence.exists
+@readonly entity Trails {
+    deviceId  : String(1000);
+    personId  : String(1000);
+    crumbDate : Date;
+    geoline   : LargeString;
+}
