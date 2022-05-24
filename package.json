@@ -55,7 +55,7 @@
 				}
 			},
 			"db": {
-				"kind": "sql"
+				"kind": "hana-cloud"
 			},
 			"messaging": {
 				"kind": "enterprise-messaging-shared",
