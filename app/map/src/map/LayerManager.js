@@ -11,7 +11,8 @@ const LAYER = {
 	Positive: 'Positive',
 	Negative: 'Negative',
 	Critical: 'Critical',
-	Neutral: 'Neutral'
+	Neutral: 'Neutral',
+	Line: 'Line'
 };
 
 const replace = (array, oldData, newData) => {
@@ -126,6 +127,37 @@ export default class LayerManager {
 		this._addLayer(LAYER.Negative);
 		this._addLayer(LAYER.Critical);
 		this._addLayer(LAYER.Neutral);
+		this._addLineLayer();
+	}
+
+	_addLineLayer() {
+		this.map.on('load', () => {
+			this.map.addSource(LAYER.Line, {
+				type: 'geojson',
+				data: {
+					type: 'Feature',
+					properties: {
+						color: '#33C9EB' // blue
+					},
+					geometry: {
+						type: 'LineString',
+						coordinates: []
+					}
+				}
+			});
+
+			this.map.addLayer({
+				id: LAYER.Line,
+				type: 'line',
+				source: LAYER.Line,
+				paint: {
+					'line-width': 3,
+					// Use a get expression (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-get)
+					// to set the line-color to a feature property value.
+					'line-color': ['get', 'color']
+				}
+			});
+		});
 	}
 
 	_addLayer(layer) {
@@ -183,6 +215,17 @@ export default class LayerManager {
 		this._setData(Object.assign(data, {
 			criticality: this._getCriticality(data)
 		}));
+	}
+
+	setLineData(geometry) {
+		const line = this.map.getSource(LAYER.Line);
+		line.setData({
+			type: 'Feature',
+			properties: {
+				color: '#33C9EB' // blue
+			},
+			geometry: geometry
+		});
 	}
 
 	refresh() {

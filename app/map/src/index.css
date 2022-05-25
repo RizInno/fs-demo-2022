@@ -31,6 +31,22 @@ code {
     display: none;
 }
 
+.select-container {
+    z-index: 1;
+    position: absolute;
+    width: 100%;
+}
+
+.select-items {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    align-items: center;
+    align-content: normal;
+    padding: 12px;
+}
+
 #notification {
     color: blue;
 }

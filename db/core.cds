@@ -7,6 +7,7 @@ namespace riz.inno.example;
 
 entity Devices {
     key ID           : String(1000);
+        personId     : String(1000);
         notification : String(12);
         ehsincident  : String(50);
         Crumbs       : Association to many Crumbs
@@ -34,9 +35,10 @@ entity Crumbs : cuid, managed {
 }
 
 @cds.persistence.exists
-@readonly entity Trails {
+@readonly
+entity Trails {
     key deviceId  : String(1000);
     key personId  : String(1000);
     key crumbDate : Date;
-    geoline   : LargeString;
+        geoline   : LargeString;
 }

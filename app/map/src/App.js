@@ -7,6 +7,8 @@ import {
 	Button,
 	Avatar,
 	Card,
+	Select,
+	Option,
 	ThemeProvider
 } from '@ui5/webcomponents-react';
 import '@ui5/webcomponents-icons/dist/nav-back.js';
@@ -17,8 +19,10 @@ import mapboxgl, { Map } from '!mapbox-gl'; // eslint-disable-line import/no-web
 
 import WebSocketProvider from "./lib/WebSocketProvider";
 import LayerManager from "./map/LayerManager";
+import ODataModel from "./lib/ODataModel";
 
 const ws = new WebSocketProvider();
+const model = new ODataModel();
 
 mapboxgl.accessToken = 'pk.eyJ1IjoibWFydGluc3RlbnppZyIsImEiOiJjazV1amZpdGwwZG92M2xucDhvbWoxMTB2In0.JWYYOv7JzUpGA51DQLQK-A';
 
@@ -36,6 +40,7 @@ function App() {
 	const [lng, setLng] = useState(paramLong ? parseFloat(paramLong) : -101.4204);
 	const [lat, setLat] = useState(paramLat ? parseFloat(paramLat) : 41.5045);
 	const [zoom, setZoom] = useState(paramZoom ? parseFloat(paramZoom) : 3.63);
+	const [devices, setDevices] = useState([]);
 
 	useEffect(() => {
 		if (map.current) return; // initialize map only once
@@ -62,13 +67,37 @@ function App() {
 		setInterval(() => {
 			layer.current.refresh();
 		}, 5000);
+
+		model.get("Devices")
+			.then(result => {
+				setDevices(result);
+			})
+			.catch(error => {
+				throw error;
+			});
 	});
+
+	const onChange = event => {
+		const option = event.detail.selectedOption;
+
+		model.get("Trails", { filter: `personId eq '${option.innerHTML}'` })
+			.then(result => {
+				if (result.length) {
+					const geometry = JSON.parse(result[0].geoline);
+					layer.current.setLineData(geometry);
+				}
+				console.log(result);
+			})
+			.catch(error => {
+				throw error;
+			});
+	};
 
 	return (
 		<ThemeProvider>
 			<ShellBar
 				primary-title="Field Service Technician Monitoring"
-				notifications-count="5+"
+				notifications-count="5"
 				show-notifications
 				show-product-switch >
 				<Button icon="nav-back" slot="startButton"></Button>
@@ -84,6 +113,13 @@ function App() {
 				alignItems={FlexBoxAlignItems.Center}
 			>
 				<Card>
+					<div className="select-container">
+						<div className="select-items">
+							<Select onChange={onChange}>
+								{devices.map(device => <Option>{device.personId}</Option>)}
+							</Select>
+						</div>
+					</div>
 					<div className="sidebar" visible={sidebar}>
 						Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
 					</div>
