@@ -41,6 +41,8 @@ function App() {
 	const [lat, setLat] = useState(paramLat ? parseFloat(paramLat) : 41.5045);
 	const [zoom, setZoom] = useState(paramZoom ? parseFloat(paramZoom) : 3.63);
 	const [devices, setDevices] = useState([]);
+	const [dates, setDates] = useState([]);
+	const trails = useRef(null);
 
 	useEffect(() => {
 		if (map.current) return; // initialize map only once
@@ -77,20 +79,29 @@ function App() {
 			});
 	});
 
-	const onChange = event => {
+	const onChangePerson = event => {
 		const option = event.detail.selectedOption;
 
 		model.get("Trails", { filter: `personId eq '${option.innerHTML}'` })
 			.then(result => {
 				if (result.length) {
 					const geometry = JSON.parse(result[0].geoline);
+					const dates = result.map(data => data.crumbDate);
+					setDates(dates);
+					trails.current = result;
 					layer.current.setLineData(geometry);
 				}
-				console.log(result);
 			})
 			.catch(error => {
 				throw error;
 			});
+	};
+
+	const onChangeDate = event => {
+		const option = event.detail.selectedOption;
+		const data = trails.current.find(trail => trail.crumbDate === option.innerHTML);
+		const geometry = JSON.parse(data.geoline);
+		layer.current.setLineData(geometry);
 	};
 
 	return (
@@ -115,8 +126,11 @@ function App() {
 				<Card>
 					<div className="select-container">
 						<div className="select-items">
-							<Select onChange={onChange}>
+							<Select onChange={onChangePerson}>
 								{devices.map(device => <Option>{device.personId}</Option>)}
+							</Select>
+							<Select onChange={onChangeDate}>
+								{dates.map(date => <Option>{date}</Option>)}
 							</Select>
 						</div>
 					</div>

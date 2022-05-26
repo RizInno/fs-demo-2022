@@ -1,4 +1,5 @@
 import { Popup } from 'mapbox-gl';
+import { bbox } from '@turf/turf';
 
 const CRITICALITY = {
 	Positive: ['65,190,65', '160,222,160'],
@@ -219,13 +220,16 @@ export default class LayerManager {
 
 	setLineData(geometry) {
 		const line = this.map.getSource(LAYER.Line);
-		line.setData({
+		const data = {
 			type: 'Feature',
 			properties: {
 				color: '#33C9EB' // blue
 			},
 			geometry: geometry
-		});
+		};
+
+		line.setData(data);
+		this.map.fitBounds(bbox(data), { padding: 50 });
 	}
 
 	refresh() {
