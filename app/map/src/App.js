@@ -9,6 +9,7 @@ import {
 	Card,
 	Select,
 	Option,
+	BusyIndicator,
 	ThemeProvider
 } from '@ui5/webcomponents-react';
 import '@ui5/webcomponents-icons/dist/nav-back.js';
@@ -40,9 +41,11 @@ function App() {
 	const [lng, setLng] = useState(paramLong ? parseFloat(paramLong) : -101.4204);
 	const [lat, setLat] = useState(paramLat ? parseFloat(paramLat) : 41.5045);
 	const [zoom, setZoom] = useState(paramZoom ? parseFloat(paramZoom) : 3.63);
-	const [devices, setDevices] = useState([]);
+	const [persons, setPersons] = useState([]);
 	const [dates, setDates] = useState([]);
 	const trails = useRef(null);
+	const [isDateDisabled, setIsDateDisabled] = useState(true);
+	const [isBusy, setIsBusy] = useState(true);
 
 	useEffect(() => {
 		if (map.current) return; // initialize map only once
@@ -70,9 +73,10 @@ function App() {
 			layer.current.refresh();
 		}, 5000);
 
-		model.get("Devices")
+		model.get("Persons")
 			.then(result => {
-				setDevices(result);
+				setPersons(result);
+				setIsBusy(false);
 			})
 			.catch(error => {
 				throw error;
@@ -82,12 +86,16 @@ function App() {
 	const onChangePerson = event => {
 		const option = event.detail.selectedOption;
 
+		setIsBusy(true);
 		model.get("Trails", { filter: `personId eq '${option.innerHTML}'` })
 			.then(result => {
+				setIsBusy(false);
+
 				if (result.length) {
 					const geometry = JSON.parse(result[0].geoline);
 					const dates = result.map(data => data.crumbDate);
 					setDates(dates);
+					setIsDateDisabled(false);
 					trails.current = result;
 					layer.current.setLineData(geometry);
 				}
@@ -126,10 +134,12 @@ function App() {
 				<Card>
 					<div className="select-container">
 						<div className="select-items">
-							<Select onChange={onChangePerson}>
-								{devices.map(device => <Option>{device.personId}</Option>)}
-							</Select>
-							<Select onChange={onChangeDate}>
+							<BusyIndicator size="Medium" active={isBusy}>
+								<Select onChange={onChangePerson}>
+									{persons.map(person => <Option>{person.personId}</Option>)}
+								</Select>
+							</BusyIndicator>
+							<Select onChange={onChangeDate} disabled={isDateDisabled}>
 								{dates.map(date => <Option>{date}</Option>)}
 							</Select>
 						</div>

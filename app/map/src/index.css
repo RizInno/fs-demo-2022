@@ -47,6 +47,10 @@ code {
     padding: 12px;
 }
 
+.select-items>ui5-select {
+    margin: 2px;
+}
+
 #notification {
     color: blue;
 }
