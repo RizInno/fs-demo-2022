@@ -30,7 +30,12 @@
 		"requires": {
 			"[production]": {
 				"db": {
-					"kind": "hana-cloud"
+					"kind": "hana-cloud",
+					"pool": {
+						"acquireTimeoutMillis": 20000,
+						"min": 0,
+						"max": 1000
+					  }
 				},
 				"auth": {
 					"kind": "xsuaa"
@@ -42,7 +47,8 @@
 					"kind": "odata-v2",
 					"model": "srv/external/API_EAM_SERVICE",
 					"credentials": {
-						"destination": "eam-api-service"
+						"destination": "ehs-api-service",
+						"path":"/sap/opu/odata/sap/ZRIZIO_SRV"
 					}
 				},
 				"API_EHS_REPORT_INCIDENT_SRV": {
