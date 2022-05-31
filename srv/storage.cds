@@ -20,4 +20,9 @@ service StorageService {
 
     entity Devices as projection on my.Devices;
     entity Trails  as projection on my.Trails;
+
+    entity Persons as
+        select from Devices distinct {
+            key personId
+        };
 }

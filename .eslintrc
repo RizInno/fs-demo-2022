@@ -13,7 +13,7 @@
 		"gen/",
 		"public/",
 		"node_modules/",
-		"dist/",
+		"build/",
 		"scripts/",
 		"test/",
 		"security/",

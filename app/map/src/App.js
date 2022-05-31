@@ -7,6 +7,9 @@ import {
 	Button,
 	Avatar,
 	Card,
+	Select,
+	Option,
+	BusyIndicator,
 	ThemeProvider
 } from '@ui5/webcomponents-react';
 import '@ui5/webcomponents-icons/dist/nav-back.js';
@@ -17,8 +20,10 @@ import mapboxgl, { Map } from '!mapbox-gl'; // eslint-disable-line import/no-web
 
 import WebSocketProvider from "./lib/WebSocketProvider";
 import LayerManager from "./map/LayerManager";
+import ODataModel from "./lib/ODataModel";
 
 const ws = new WebSocketProvider();
+const model = new ODataModel();
 
 mapboxgl.accessToken = 'pk.eyJ1IjoibWFydGluc3RlbnppZyIsImEiOiJjazV1amZpdGwwZG92M2xucDhvbWoxMTB2In0.JWYYOv7JzUpGA51DQLQK-A';
 
@@ -36,6 +41,11 @@ function App() {
 	const [lng, setLng] = useState(paramLong ? parseFloat(paramLong) : -101.4204);
 	const [lat, setLat] = useState(paramLat ? parseFloat(paramLat) : 41.5045);
 	const [zoom, setZoom] = useState(paramZoom ? parseFloat(paramZoom) : 3.63);
+	const [persons, setPersons] = useState([]);
+	const [dates, setDates] = useState([]);
+	const trails = useRef(null);
+	const [isDateDisabled, setIsDateDisabled] = useState(true);
+	const [isBusy, setIsBusy] = useState(true);
 
 	useEffect(() => {
 		if (map.current) return; // initialize map only once
@@ -62,13 +72,51 @@ function App() {
 		setInterval(() => {
 			layer.current.refresh();
 		}, 5000);
+
+		model.get("Persons")
+			.then(result => {
+				setPersons(result);
+				setIsBusy(false);
+			})
+			.catch(error => {
+				throw error;
+			});
 	});
+
+	const onChangePerson = event => {
+		const option = event.detail.selectedOption;
+
+		setIsBusy(true);
+		model.get("Trails", { filter: `personId eq '${option.innerHTML}'` })
+			.then(result => {
+				setIsBusy(false);
+
+				if (result.length) {
+					const geometry = JSON.parse(result[0].geoline);
+					const dates = result.map(data => data.crumbDate);
+					setDates(dates);
+					setIsDateDisabled(false);
+					trails.current = result;
+					layer.current.setLineData(geometry);
+				}
+			})
+			.catch(error => {
+				throw error;
+			});
+	};
+
+	const onChangeDate = event => {
+		const option = event.detail.selectedOption;
+		const data = trails.current.find(trail => trail.crumbDate === option.innerHTML);
+		const geometry = JSON.parse(data.geoline);
+		layer.current.setLineData(geometry);
+	};
 
 	return (
 		<ThemeProvider>
 			<ShellBar
 				primary-title="Field Service Technician Monitoring"
-				notifications-count="5+"
+				notifications-count="5"
 				show-notifications
 				show-product-switch >
 				<Button icon="nav-back" slot="startButton"></Button>
@@ -84,6 +132,18 @@ function App() {
 				alignItems={FlexBoxAlignItems.Center}
 			>
 				<Card>
+					<div className="select-container">
+						<div className="select-items">
+							<BusyIndicator size="Medium" active={isBusy}>
+								<Select onChange={onChangePerson}>
+									{persons.map(person => <Option>{person.personId}</Option>)}
+								</Select>
+							</BusyIndicator>
+							<Select onChange={onChangeDate} disabled={isDateDisabled}>
+								{dates.map(date => <Option>{date}</Option>)}
+							</Select>
+						</div>
+					</div>
 					<div className="sidebar" visible={sidebar}>
 						Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
 					</div>

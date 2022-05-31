@@ -89,7 +89,8 @@ class StorageService extends cds.ApplicationService {
 			if (!result) {
 				// Create new device record
 				await tx.run(INSERT.into(Devices).entries([{
-					ID: data.Device_ID
+					ID: data.Device_ID,
+					personId: data.personId
 				}]));
 				result = await tx.run(SELECT.one.from(Devices).where({ ID: data.Device_ID }));
 			}
@@ -120,6 +121,7 @@ class StorageService extends cds.ApplicationService {
 				// -- Update Device entity with SAP info
 				await tx.run(UPDATE(Devices)
 					.with({
+						personId: data.personId,
 						notification: notification.NotifNo,
 						ehsincident: EhsIncident.IncidentUUID
 					})
