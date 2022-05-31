@@ -6,6 +6,35 @@
 ## Get a list of trails
 GET {{server}}{{service}}Trails
 
+### Sample Message
+POST {{server}}{{service}}Crumbs
+Content-Type: application/json
+
+{
+    "accelerometerScore": "1.03521728515625",
+    "accelerometerX": "0.0090789794921875",
+    "accelerometerY": "-0.02618408203125",
+    "accelerometerZ": "-0.9999542236328125",
+    "addressCity": "Heidelberg",
+    "addressPostalCode": "69115",
+    "addressState": "Baden-Württemberg",
+    "addressStreet": "Vangerowstraße",
+    "crumbTime": "2022-05-31T13:18:37.000Z",
+    "deviceId": "76F19B03-E2ED-4193-B774-C1D33C393C05",
+    "emergencyContacted": false,
+    "fallDetected": false,
+    "locationLat": 49.409333110333414,
+    "locationLong": 8.673441922678654,
+    "personId": "Martin Stenzig",
+    "speedMPH": "0.0",
+    "ID": "37c724e4-0aa2-48c8-8ca5-f3ecf9b28c83",
+    "Device_ID": "76F19B03-E2ED-4193-B774-C1D33C393C05",
+    "createdAt": "2022-05-31T13:09:51.778Z",
+    "createdBy": "privileged",
+    "modifiedAt": "2022-05-31T13:09:51.778Z",
+    "modifiedBy": "privileged"
+}
+
 ### Populate the database with some data
 POST {{server}}{{service}}Crumbs
 Content-Type: application/json
@@ -56,8 +85,8 @@ GET {{server}}{{service}}Crumbs?$top=5
 ### Read all devices
 GET {{server}}{{service}}Devices
 
-### Delete Martin's phone
-PATCH {{server}}{{service}}Devices('76F19B03-E2ED-4193-B774-C1D33C393C05')
+### Delete Martin "s phone
+PATCH {{server}}{{service}}Devices( "76F19B03-E2ED-4193-B774-C1D33C393C05 ")
 Content-Type: application/json
 
 {
