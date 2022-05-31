@@ -26,8 +26,8 @@ entity Crumbs : cuid, managed {
     accelerometerY     : Double;
     accelerometerZ     : Double;
     addressCity        : String(1000);
-    addressPostalCode  : String(10);
-    addressState       : String(10);
+    addressPostalCode  : String(50);
+    addressState       : String(100);
     addressStreet      : String(1000);
     fallDetected       : Boolean;
     emergencyContacted : Boolean;
