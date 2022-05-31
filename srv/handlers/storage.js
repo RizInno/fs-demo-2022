@@ -118,12 +118,16 @@ class StorageService extends cds.ApplicationService {
 				const record = Object.assign(eamTemplate, { ShortText: shortText });
 				const notification = await eam.run(INSERT.into(NotifHeadSet).entries([record]));
 
+				console.log("EHS: ", EhsIncident.IncidentUUID, "EAM: ", notification.NotifNo);
+
 				// -- Update Device entity with SAP info
 				await tx.run(UPDATE(Devices)
 					.with({
 						personId: data.personId,
 						notification: notification.NotifNo,
+						// notification: "100012211",
 						ehsincident: EhsIncident.IncidentUUID
+						// ehsincident: "afdcb808-dab0-43d1-828a-f70eb3ede19b"
 					})
 					.where({ ID: data.Device_ID }));
 			}
