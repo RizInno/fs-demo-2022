@@ -57,8 +57,6 @@ The data model is simple and aligns with the IoT informationation we receive fro
         - See scripts show_cap_processes.sh / kill_cap_processes.sh
 - Geospatial DataTypes
     - No testing unless HANA as DB
-    - 
-
 
 
 # Testing
